@@ -6,10 +6,11 @@ import sys
 class PostGresDB:
     conn = cur = None
 
-    def __init__(self, ip: str):
+    def __init__(self, ip: str, schema: str):
         print("Connecting to postgres@{}".format(ip))
         self.conn = psycopg.connect(host=ip, database="postgres", user="postgres", password="postgres")
         self.cur = self.conn.cursor()
+        self.cur.exec("set schema '{}'".format(schema))
 
     def exec(self, sql: str):
         self.cur.execute(sql)
@@ -19,8 +20,7 @@ class PostGresDB:
 
 
 def main():
-    db = PostGresDB(sys.argv[1])
-    db.exec("set schema 'Payroll'")
+    db = PostGresDB(sys.argv[1], "Payroll")
     db.exec("select * from state_t")
 
     print(db.result())
