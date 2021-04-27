@@ -39,7 +39,7 @@ class Entity(Enum):
 class Query:
     @staticmethod
     def CREATE(entity: Entity, *args):
-        return "insert into {}{} values {};".format(entity.value[0], str(entity.value[1]).replace("'", ""), str(args))
+        return "insert into {}{} values {} returning *;".format(entity.value[0], str(entity.value[1]).replace("'", ""), str(args))
 
     @staticmethod
     def UPDATE(entity: Entity, conditional: str, *args):
@@ -52,8 +52,9 @@ class Query:
     def DELETE(entity: Entity, conditional: str):
         return "delete from {} where {} returning *;".format(entity.value[0], conditional)
 
-
-# 99.127.217.73
+    @staticmethod
+    def SELECT(entity: Entity, *args):
+        return "select {} FROM {};".format(str(args).strip("()").removesuffix(",").replace("'", ""), entity.value[0])
 
 
 class PostGresDB:
@@ -66,10 +67,13 @@ class PostGresDB:
         self.cur.execute("set schema '{}'".format(schema))
 
     def exec(self, sql: str):
-        print("SQL: ", sql)
+        # print("SQL: ", sql)
         self.cur.execute(sql)
         self.conn.commit()
-        print(self.result())
+        val = self.result()
+        print(val)
+        if type(val) == 'list':
+            return val
 
     def result(self):
         try:
@@ -84,9 +88,11 @@ class PostGresDB:
 
 def main():
     db = PostGresDB(sys.argv[1], "Payroll")
-    db.exec(Query.DELETE(Entity.STATE, "state_name='bongoState'"))
+    db.exec(Query.DELETE(Entity.STATE, "state_name='bongoStated'"))
     db.exec(Query.CREATE(Entity.STATE, "bongoStated", "456"))
     db.exec(Query.UPDATE(Entity.STATE, "state_name='bongoStated'", "tax_rate=753.12"))
+    db.exec(Query.SELECT(Entity.STATE, "*"))
+    db.exec(Query.SELECT(Entity.EMPLOYEE, "first_name", "last_name", "job_title"))
     db.close()
 
 
