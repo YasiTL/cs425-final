@@ -16,6 +16,10 @@ class Entity(Enum):
             "employer_cost_for_family",
         ),
     )
+    DEPENDENT = (
+        "Dependent_t",
+        ("d_id", "first_name", "last_name", "ssn", "benefitSelection"),
+    )
     EMPLOYEE = (
         "employee_t",
         (
@@ -72,7 +76,7 @@ class PostGresDB:
         self.conn.commit()
         val = self.result()
         print(val)
-        if type(val) == 'list':
+        if type(val) == "list":
             return val
 
     def result(self):
