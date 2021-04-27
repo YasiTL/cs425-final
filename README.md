@@ -11,8 +11,6 @@ Python scripts require
    - Is installed with python on windows alongside [IDLE](https://docs.python.org/3/library/idle.html)
 
 ## Project Statement
-___
-
 Project Breakdown and timeline
 First deliverable: Each group will develop an E-R model for the application on and upload it as any type of image format or pdf due by **March 03**. You can use lucidchart or other software to draw your
 diagram. The second deliverable: The E-R model will be translated into a relational schema implemented by an SQL script. The script should run on a PostgreSQL database (or a comparable database of your choice). In addition to defining the tables and constraints the script should create indexes where appropriate due by **March 28**.
