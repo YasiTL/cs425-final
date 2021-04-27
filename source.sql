@@ -101,3 +101,4 @@ create table has_r(
 --values ('basic health', 159.54, 134.87, 15678.25, 1111.11);
 -- insert into employee_t(e_id, first_name, last_name, ssn, job_title, salary_type, insurancePlan, email, country, state, street_name, postal_code, F01k_deduction)
 -- values ('TestID', 'boi', 'Smith', 4201337, 'ADMIN', 'HOURLY', 'basic health', 'TechYeah@iit.edu', 'Albania', 'Illinois', 'Main Street', 1808, 25.45);
+--update employee_t set first_name = 'junga' where e_id = 'TestID2' RETURNING *;
