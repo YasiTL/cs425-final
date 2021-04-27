@@ -5,16 +5,55 @@ from enum import Enum
 
 
 class Entity(Enum):
-    STATE = ("state_t", ("state_name","tax_rate"))
-    INSURNACE_PLAN = ("insurancePlan_t", ("plan_id" , "employee_cost_for_individualPlan" , "employee_cost_for_familyPlan" , "employer_cost_for_indivudal" , "employer_cost_for_family"))
-    EMPLOYEE = ("employee_t", ("e_id" , "first_name" , "last_name" , "ssn" , "job_title" , "salary_type" , "insurancePlan" , "email" , "country" , "state" , "street_name" , "postal_code" , "F01k_deduction"))
+    STATE = ("state_t", ("state_name", "tax_rate"))
+    INSURNACE_PLAN = (
+        "insurancePlan_t",
+        (
+            "plan_id",
+            "employee_cost_for_individualPlan",
+            "employee_cost_for_familyPlan",
+            "employer_cost_for_indivudal",
+            "employer_cost_for_family",
+        ),
+    )
+    EMPLOYEE = (
+        "employee_t",
+        (
+            "e_id",
+            "first_name",
+            "last_name",
+            "ssn",
+            "job_title",
+            "salary_type",
+            "insurancePlan",
+            "email",
+            "country",
+            "state",
+            "street_name",
+            "postal_code",
+            "F01k_deduction",
+        ),
+    )
 
-class Query():
+
+class Query:
+    @staticmethod
     def CREATE(entity: Entity, *args):
-        return "insert into {0}({1}) values {2};".format(entity.value[0], str(entity.value[1]), str(args))
+        return "insert into {}{} values {};".format(entity.value[0], str(entity.value[1]).replace("'", ""), str(args))
 
-    def UPDATE(entity: Entity, *args):
-        return "update {0} set {2} where {3} returning *;".format(entity.value[0], entity.value[1])
+    @staticmethod
+    def UPDATE(entity: Entity, conditional: str, *args):
+        sets = ""
+        for s in args:
+            sets += s + " "
+        return "update {} set {} where {} returning *;".format(entity.value[0], sets, conditional)
+
+    @staticmethod
+    def DELETE(entity: Entity, conditional: str):
+        return "delete from {} where {} returning *;".format(entity.value[0], conditional)
+
+
+# 99.127.217.73
 
 
 class PostGresDB:
@@ -45,9 +84,9 @@ class PostGresDB:
 
 def main():
     db = PostGresDB(sys.argv[1], "Payroll")
-    db.exec(Query.CREATE(Entity.STATE, "bongoState", 24.6))
-    # db.exec(Query.CREATE, Entity.EMPLOYEE, 'TestID2', 'boi', 'Smith', 4201337, 'ADMIN', 'HOURLY', 'basic health', 'TechYeah@iit.edu', 'Albania', 'Illinois', 'Main Street', 1808, 25.45)
-    # db.exec(Query.UPDATE, Entity.EMPLOYEE, )
+    db.exec(Query.DELETE(Entity.STATE, "state_name='bongoState'"))
+    db.exec(Query.CREATE(Entity.STATE, "bongoStated", "456"))
+    db.exec(Query.UPDATE(Entity.STATE, "state_name='bongoStated'", "tax_rate=753.12"))
     db.close()
 
 
