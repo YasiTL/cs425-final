@@ -1,6 +1,17 @@
 import psycopg2 as psycopg  # pip install psycopg2-binary
 import base64
 import sys
+from enum import Enum
+
+
+class Entity(Enum):
+    STATE = "state_t"
+    EMPLOYEE = "employee_t"
+    INSURNACE_PLAN = "insurancePlan_t"
+
+
+class Query(Enum):
+    CREATE = "insert into {}(state_name, tax_rate) values ('test2', 144);"
 
 
 class PostGresDB:
@@ -18,11 +29,13 @@ class PostGresDB:
     def result(self):
         return self.cur.fetchall()
 
+    def runQuery(self, query: Query, entity: Entity):
+        self.exec(query.value.format(entity.value))
+
 
 def main():
     db = PostGresDB(sys.argv[1], "Payroll")
-    db.exec("select * from state_t")
-
+    db.runQuery(Query.CREATE, Entity.EMPLOYEE)
     print(db.result())
 
 
