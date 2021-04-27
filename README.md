@@ -2,18 +2,22 @@
 # CS425 ERP project
 
 ## Requirements
+Database is built using [PostgreSQL](https://www.postgresql.org/)
 
-Python scripts require [Psycopg 2](https://www.psycopg.org/) which can be installed using the command
+Python scripts require
+ - [Psycopg 2](https://www.psycopg.org/)
+   - Can be installed by running `pip install psycopg2-binary`
+ - [tkinter](https://docs.python.org/3/library/tkinter.html)
+   - Is installed with python on windows alongside [IDLE](https://docs.python.org/3/library/idle.html)
 
->`pip install psycopg2-binary`
-
-## Project requirements
+## Project Statement
+___
 
 Project Breakdown and timeline
-First deliverable: Each group will develop an E-R model for the application on and upload it as any type of image format or pdf due by March03. You can use lucidchart or other software to draw your
-diagram. The second deliverable: The E-R model will be translated into a relational schema implemented by an SQL script. The script should run on a PostgreSQL database (or a comparable database of your choice). In addition to defining the tables and constraints the script should create indexes where appropriate due by March28.
+First deliverable: Each group will develop an E-R model for the application on and upload it as any type of image format or pdf due by **March 03**. You can use lucidchart or other software to draw your
+diagram. The second deliverable: The E-R model will be translated into a relational schema implemented by an SQL script. The script should run on a PostgreSQL database (or a comparable database of your choice). In addition to defining the tables and constraints the script should create indexes where appropriate due by **March 28**.
 Last deliverable is an application that uses the relational schema defined in the first two deliverables.
-Due last week of class May5.
+Due last week of class **May 5**.
 Submittal
 Everyone will submit the part they worked on. If the group decided to submit one final version,
 each team member's contribution must be stated. The project will be submitted via blackboard. For the
