@@ -37,7 +37,7 @@ class PostGresDB:
         sql = query.value.format(entity.value[0], entity.value[1], str(args))
         print("SQL: ", sql)
         self.exec(sql)
-        print(db.result())
+        print(self.result())
 
     def close(self):
         self.cur.close()
