@@ -1,20 +1,28 @@
-from tkinter import * 
-from tkinter.ttk import *
-    
-# writing code needs to
-# create the main window of 
-# the application creating 
-# main window object named root
-root = Tk()
-  
-# giving title to the main window
-root.title("Employee Project")
-  
-# Label is what output will be 
-# show on the window
-label = Label(root, text ="Hello World !").pack()
+import tkinter as tk
 
-# calling mainloop method which is used
-# when your application is ready to run
-# and it tells the code to keep displaying 
-root.mainloop()
+class Application(tk.Frame):
+    def __init__(self, master=None):
+        super().__init__(master)
+        self.master = master
+        # Set minimum size for application
+        self.master.minsize(600,600)
+        self.master.maxsize(600,600)
+        self.pack()
+        self.create_widgets()
+
+    def create_widgets(self):
+        self.hi_there = tk.Button(self)
+        self.hi_there["text"] = "Hello World\n(click me)"
+        self.hi_there["command"] = self.say_hi
+        self.hi_there.pack(side="top")
+
+        self.quit = tk.Button(self, text="QUIT", fg="red",
+                              command=self.master.destroy)
+        self.quit.pack(side="bottom")
+
+    def say_hi(self):
+        print("hi there, everyone!")
+
+root = tk.Tk()
+app = Application(master=root)
+app.mainloop()
