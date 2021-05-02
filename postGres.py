@@ -40,6 +40,18 @@ class Entity(Enum):
     )
 
 
+class Multivalue(Enum):
+    DEPENDENT_BENEFIT_SELECTION = ("dependent_benefitselection_m", ("d_id", "selection"))
+    EMPLOYEE_BENEFIT_SELECTION = ("employee_benefitselection_m", ("e_id", "selection"))
+    EMPLOYEE_BENEFIT_SELECTION = ("employee_phone_m", ("e_id", "phone"))
+
+
+class Relation(Enum):
+    DEPENDENT_BENEFIT_SELECTION = ("has_r", ("e_id", "d_id"))
+    EMPLOYEE_BENEFIT_SELECTION = ("lives_in_r", ("e_id", "state_name"))
+    EMPLOYEE_BENEFIT_SELECTION = ("picks_plan_r", ("e_id", "plan_id"))
+
+
 class Query:
     @staticmethod
     def CREATE(entity: Entity, *args):
