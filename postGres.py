@@ -113,7 +113,7 @@ class Query:
     def SELECT_WHERE(entity: Entity, conditional: str, *args):
         """SQL Select given the entity table, the conditional , and which columns to return
 
-        Ex: `Query.SELECT_WHERE(Entity.STATE, "*")`
+        Ex: `Query.SELECT_WHERE(Entity.STATE,"e_id='1234567'", "*")`
         """
         return "select {} FROM {} WHERE {};".format(str(args).strip("()").removesuffix(",").replace("'", ""), entity.value[0], conditional)
 
