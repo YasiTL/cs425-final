@@ -109,6 +109,14 @@ class Query:
         """
         return "select {} FROM {};".format(str(args).strip("()").removesuffix(",").replace("'", ""), entity.value[0])
 
+    @staticmethod
+    def SELECT_WHERE(entity: Entity, conditional: str, *args):
+        """SQL Select given the entity table, the conditional , and which columns to return
+
+        Ex: `Query.SELECT_WHERE(Entity.STATE, "*")`
+        """
+        return "select {} FROM {} WHERE {};".format(str(args).strip("()").removesuffix(",").replace("'", ""), entity.value[0], conditional)
+
 
 class PostGresDB:
     conn = cur = None
