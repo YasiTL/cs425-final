@@ -60,6 +60,7 @@ class Query:
         """
         if len(args) != len(entity.value[1]):
             raise ValueError("Not Matching entity parameters\n Values: {}".format(entity.value[1]))
+
         return "insert into {}{} values {} returning *;".format(entity.value[0], str(entity.value[1]).replace("'", ""), str(args))
 
     @staticmethod
