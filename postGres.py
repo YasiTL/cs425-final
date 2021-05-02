@@ -101,19 +101,21 @@ class PostGresDB:
         self.cur.execute("set schema '{}'".format(schema))
 
     def exec(self, sql: str):
-        # print("SQL: ", sql)
+        """Execute an SQL statement"""
+        print("SQL: ", sql)
         self.cur.execute(sql)
         self.conn.commit()
-        val = self.result()
-        print(val)
-        if type(val) == "list":
-            return val
+        # val = self.result()
+        # print(val)
+        # if type(val) == "list":
+        # return val
 
     def result(self):
+        """Returns whatever result an execution returns, if any"""
         try:
             return self.cur.fetchall()
-        except psycopg.ProgrammingError as e:
-            return e
+        except psycopg.ProgrammingError:
+            return None
 
     def close(self):
         self.cur.close()
