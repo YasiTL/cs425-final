@@ -43,10 +43,18 @@ class Entity(Enum):
 class Query:
     @staticmethod
     def CREATE(entity: Entity, *args):
+        """SQL Create given the entity table and the appropriate initalizing parameters
+
+        Ex: `Query.CREATE(Entity.STATE, "illinois", "456")`
+        """
         return "insert into {}{} values {} returning *;".format(entity.value[0], str(entity.value[1]).replace("'", ""), str(args))
 
     @staticmethod
     def UPDATE(entity: Entity, conditional: str, *args):
+        """SQL Update given the entity table, the SQL conditional for selection, and the paremeters to set
+
+        Ex: `Query.UPDATE(Entity.STATE, "state_name='illinois'", "tax_rate=753.12")`
+        """
         sets = ""
         for s in args:
             sets += s + " "
@@ -54,10 +62,18 @@ class Query:
 
     @staticmethod
     def DELETE(entity: Entity, conditional: str):
+        """SQL Delete given the entity table and the SQL conditional for selection
+
+        Ex: `Query.DELETE(Entity.STATE, "state_name='illinois'")`
+        """
         return "delete from {} where {} returning *;".format(entity.value[0], conditional)
 
     @staticmethod
     def SELECT(entity: Entity, *args):
+        """SQL Select given the entity table and which columns to return
+
+        Ex: `Query.SELECT(Entity.STATE, "*")`
+        """
         return "select {} FROM {};".format(str(args).strip("()").removesuffix(",").replace("'", ""), entity.value[0])
 
 
