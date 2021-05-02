@@ -1,6 +1,5 @@
 import psycopg2 as psycopg  # pip install psycopg2-binary
 import base64
-import sys
 from enum import Enum
 
 
@@ -43,13 +42,13 @@ class Entity(Enum):
 class Multivalue(Enum):
     DEPENDENT_BENEFIT_SELECTION = ("dependent_benefitselection_m", ("d_id", "selection"))
     EMPLOYEE_BENEFIT_SELECTION = ("employee_benefitselection_m", ("e_id", "selection"))
-    EMPLOYEE_BENEFIT_SELECTION = ("employee_phone_m", ("e_id", "phone"))
+    EMPLOYEE_PHONE = ("employee_phone_m", ("e_id", "phone"))
 
 
 class Relation(Enum):
-    DEPENDENT_BENEFIT_SELECTION = ("has_r", ("e_id", "d_id"))
-    EMPLOYEE_BENEFIT_SELECTION = ("lives_in_r", ("e_id", "state_name"))
-    EMPLOYEE_BENEFIT_SELECTION = ("picks_plan_r", ("e_id", "plan_id"))
+    HAS = ("has_r", ("e_id", "d_id"))
+    LIVES_IN = ("lives_in_r", ("e_id", "state_name"))
+    PICKS_PLAN = ("picks_plan_r", ("e_id", "plan_id"))
 
 
 class Query:
@@ -59,6 +58,8 @@ class Query:
 
         Ex: `Query.CREATE(Entity.STATE, "illinois", "456")`
         """
+        if len(args) != len(entity.value[1]):
+            raise ValueError("Not Matching entity parameters\n{}".format(entity.value[1]))
         return "insert into {}{} values {} returning *;".format(entity.value[0], str(entity.value[1]).replace("'", ""), str(args))
 
     @staticmethod
