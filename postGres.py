@@ -51,6 +51,25 @@ class Relation(Enum):
     PICKS_PLAN = ("picks_plan_r", ("e_id", "plan_id"))
 
 
+class DataType(Enum):
+    class BenefitSelection(Enum):
+        F01K_CONTRIBUTION = "401K_CONTRIBUTION"
+        ATTORNEY_PLAN = "ATTORNEY_PLAN"
+        LIFE_INSURANCE = "LIFE_INSURANCE"
+        DENTAL = "DENTAL"
+        VISION = "VISION"
+
+    class JobTitle(Enum):
+        ADMIN = "ADMIN"
+        MANAGER = "MANAGER"
+        EMPLOYEE = "EMPLOYEE"
+        VISION = "VISION"
+
+    class Salary(Enum):
+        HOURLY = "HOURLY"
+        SALARY = "SALARY"
+
+
 class Query:
     @staticmethod
     def CREATE(entity: Entity, *args):
@@ -89,6 +108,14 @@ class Query:
         Ex: `Query.SELECT(Entity.STATE, "*")`
         """
         return "select {} FROM {};".format(str(args).strip("()").removesuffix(",").replace("'", ""), entity.value[0])
+
+    @staticmethod
+    def SELECT_WHERE(entity: Entity, conditional: str, *args):
+        """SQL Select given the entity table, the conditional , and which columns to return
+
+        Ex: `Query.SELECT_WHERE(Entity.STATE,"e_id='1234567'", "*")`
+        """
+        return "select {} FROM {} WHERE {};".format(str(args).strip("()").removesuffix(",").replace("'", ""), entity.value[0], conditional)
 
 
 class PostGresDB:
