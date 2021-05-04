@@ -51,7 +51,7 @@ class Relation(Enum):
     PICKS_PLAN = ("picks_plan_r", ("e_id", "plan_id"))
 
 
-class DataType(Enum):
+class DataType():
     class BenefitSelection(Enum):
         F01K_CONTRIBUTION = "401K_CONTRIBUTION"
         ATTORNEY_PLAN = "ATTORNEY_PLAN"
