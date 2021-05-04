@@ -51,7 +51,7 @@ class Relation(Enum):
     PICKS_PLAN = ("picks_plan_r", ("e_id", "plan_id"))
 
 
-class DataType():
+class DataType:
     class BenefitSelection(Enum):
         F01K_CONTRIBUTION = "401K_CONTRIBUTION"
         ATTORNEY_PLAN = "ATTORNEY_PLAN"
@@ -118,32 +118,38 @@ class Query:
         return "select {} FROM {} WHERE {};".format(str(args).strip("()").removesuffix(",").replace("'", ""), entity.value[0], conditional)
 
 
-class PostGresDB:
-    conn = cur = None
+conn = cur = None
 
-    def __init__(self, ip: str, schema: str):
+
+def connect(ip: str, schema: str):
+    global conn, cur
+    if not conn:
         print("Connecting to postgres@{}".format(ip))
-        self.conn = psycopg.connect(host=ip, database="postgres", user="postgres", password="postgres")
-        self.cur = self.conn.cursor()
-        self.cur.execute("set schema '{}'".format(schema))
+        conn = psycopg.connect(host=ip, database="postgres", user="postgres", password="postgres")
+        cur = conn.cursor()
+        cur.execute("set schema '{}'".format(schema))
+    else:
+        print("Already connected")
 
-    def exec(self, sql: str):
-        """Execute an SQL statement"""
-        print("SQL: ", sql)
-        self.cur.execute(sql)
-        self.conn.commit()
-        # val = self.result()
-        # print(val)
-        # if type(val) == "list":
-        # return val
 
-    def result(self):
-        """Returns whatever result an execution returns, if any"""
-        try:
-            return self.cur.fetchall()
-        except psycopg.ProgrammingError:
-            return None
+def execute(sql: str):
+    global conn, cur
+    """Execute an SQL statement"""
+    print("SQL: ", sql)
+    cur.execute(sql)
+    conn.commit()
 
-    def close(self):
-        self.cur.close()
-        self.conn.close()
+
+def result():
+    global conn, cur
+    """Returns whatever result an execution returns, if any"""
+    try:
+        return cur.fetchall()
+    except psycopg.ProgrammingError:
+        return None
+
+
+def close():
+    global conn, cur
+    cur.close()
+    conn.close()

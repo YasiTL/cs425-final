@@ -1,18 +1,18 @@
 import sys
-from postGres import PostGresDB, Query, Entity, Multivalue, Relation, DataType
-from signIn import signIn
+from postGres import Query, Entity, Multivalue, Relation, DataType
+import postGres as DB
+import Auth
 
 
 def main():
     if len(sys.argv) < 2:
         exit("No ip given as argument")
 
-    db = PostGresDB(sys.argv[1], "Payroll")
-    auth = signIn(db)
+    DB.connect(sys.argv[1], "Payroll")
 
-    auth.signIn("Yasi", 1234567)
+    Auth.signIn("Yasi", 1234567)
 
-    clearance = auth.getTitle()
+    clearance = Auth.getTitle()
 
     if clearance == DataType.JobTitle.ADMIN:
         print("is Admin")
