@@ -72,7 +72,7 @@ class DataType:
 
 class Query:
     @staticmethod
-    def CREATE(entity: Entity, *args):
+    def CREATE(entity: Enum, *args):
         """SQL Create given the entity table and the appropriate initalizing parameters
 
         Ex: `Query.CREATE(Entity.STATE, "illinois", "456")`
@@ -83,18 +83,33 @@ class Query:
         return "insert into {}{} values {} returning *;".format(entity.value[0], str(entity.value[1]).replace("'", ""), str(args))
 
     @staticmethod
-    def UPDATE(entity: Entity, conditional: str, *args):
+    def UPDATE(entity: Enum, conditional: str, *args):
         """SQL Update given the entity table, the SQL conditional for selection, and the paremeters to set
 
         Ex: `Query.UPDATE(Entity.STATE, "state_name='illinois'", "tax_rate=753.12")`
         """
         sets = ""
         for s in args:
-            sets += s + " "
+            if s:
+                sets += s + ", "
+        sets = sets.strip(" ,")
         return "update {} set {} where {} returning *;".format(entity.value[0], sets, conditional)
 
     @staticmethod
-    def DELETE(entity: Entity, conditional: str):
+    def UPDATE_SINGLE(entity: Enum, primary_key: str, *args):
+        """SQL Update a single entity given it's single primary key and the paremeters to set
+
+        Ex: `Query.UPDATE(Entity.STATE, "illinois", "tax_rate=753.12")`
+        """
+        sets = ""
+        for s in args:
+            if s:
+                sets += s + ", "
+        sets = sets.strip(" ,")
+        return "update {} set {} where {} returning *;".format(entity.value[0], sets, "{}='{}'".format(entity.value[1][0], primary_key))
+
+    @staticmethod
+    def DELETE(entity: Enum, conditional: str):
         """SQL Delete given the entity table and the SQL conditional for selection
 
         Ex: `Query.DELETE(Entity.STATE, "state_name='illinois'")`
@@ -102,23 +117,40 @@ class Query:
         return "delete from {} where {} returning *;".format(entity.value[0], conditional)
 
     @staticmethod
-    def SELECT(entity: Entity, *args):
-        """SQL Select given the entity table and which columns to return
+    def SELECT(entity: Enum, *args):
+        """SQL Select given the entity table and which columns to return (returns all by default)
 
         Ex: `Query.SELECT(Entity.STATE, "*")`
         """
+        if len(args) == 0:
+            args = "*"
         return "select {} FROM {};".format(str(args).strip("()").removesuffix(",").replace("'", ""), entity.value[0])
 
     @staticmethod
-    def SELECT_WHERE(entity: Entity, conditional: str, *args):
-        """SQL Select given the entity table, the conditional , and which columns to return
+    def SELECT_WHERE(entity: Enum, conditional: str, *args):
+        """SQL Select given the entity table, the conditional , and which columns to return (returns all by default)
 
-        Ex: `Query.SELECT_WHERE(Entity.STATE,"e_id='1234567'", "*")`
+        Ex: `Query.SELECT_WHERE(Entity.EMPLOYEE,"e_id='1234567'", "*")`
         """
+        if len(args) == 0:
+            args = "*"
         return "select {} FROM {} WHERE {};".format(str(args).strip("()").removesuffix(",").replace("'", ""), entity.value[0], conditional)
 
+    @staticmethod
+    def FIND(entity: Enum, primary_key: str, *args):
+        """Find an entity given it's single primary key, and which columns to return (returns all by default)
 
-conn = cur = None
+        Ex: `Query.FIND(Entity.STATE, "illinois", "*")`
+        """
+        if len(args) == 0:
+            args = "*"
+        return "select {} FROM {} WHERE {};".format(
+            str(args).strip("()").removesuffix(",").replace("'", ""), entity.value[0], "{}='{}'".format(entity.value[1][0], primary_key)
+        )
+
+
+conn = None
+cur = None
 
 
 def connect(ip: str, schema: str):
