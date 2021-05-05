@@ -167,6 +167,9 @@ def connect(ip: str, schema: str):
 def execute(sql: str):
     global conn, cur
     """Execute an SQL statement"""
+    if not conn:
+        print("Not connected!")
+        return
     print("SQL: ", sql)
     cur.execute(sql)
     conn.commit()
@@ -175,6 +178,9 @@ def execute(sql: str):
 def result():
     global conn, cur
     """Returns whatever result an execution returns, if any"""
+    if not conn:
+        print("Not connected!")
+        return
     try:
         return cur.fetchall()
     except psycopg.ProgrammingError:
@@ -183,5 +189,8 @@ def result():
 
 def close():
     global conn, cur
+    if not conn:
+        print("Not connected!")
+        return
     cur.close()
     conn.close()
