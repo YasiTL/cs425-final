@@ -2,6 +2,7 @@ import tkinter as tk
 from functools import partial
 from postGres import DataType
 from Employee import Employee
+import postGres as DB
 
 # Just set the current employee id + data at the start, so all of the pages can access the data.
 g_currentEmployeeId = 1
@@ -356,11 +357,6 @@ class Report_3(tk.Frame):
     def go_back(self):
         self.frame.grid_forget()
         Menu(master=self.master, app=self.app).start()
-
-
-import postGres as DB
-
-DB.connect("99.127.217.73", "Payroll")
 
 root = tk.Tk()
 
