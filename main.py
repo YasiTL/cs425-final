@@ -3,8 +3,7 @@ from postGres import Query, Entity, Multivalue, Relation, DataType
 import postGres as DB
 import Auth
 from Employee import Employee
-import tkinter as tk
-from functools import partial
+import GUI
 
 
 def main():
@@ -12,6 +11,8 @@ def main():
         exit("No ip given as argument")
 
     DB.connect(sys.argv[1], "Payroll")
+
+    GUI.init()
 
     Auth.signIn("Yasi", 1234567)
 

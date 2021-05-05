@@ -358,13 +358,15 @@ class Report_3(tk.Frame):
         self.frame.grid_forget()
         Menu(master=self.master, app=self.app).start()
 
-root = tk.Tk()
+def init():
+    root = tk.Tk()
 
-# Create a 3 by 3 grid.
-root.grid_rowconfigure(0, weight=1)
-root.grid_rowconfigure(2, weight=1)
-root.grid_columnconfigure(0, weight=1)
-root.grid_columnconfigure(2, weight=1)
+    # Create a 3 by 3 grid.
+    root.grid_rowconfigure(0, weight=1)
+    root.grid_rowconfigure(2, weight=1)
+    root.grid_columnconfigure(0, weight=1)
+    root.grid_columnconfigure(2, weight=1)
 
-app = RootApp(root=root)
-root.mainloop()
+    app = RootApp(root=root)
+    root.mainloop()
+    return app
