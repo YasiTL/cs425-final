@@ -171,8 +171,10 @@ def execute(sql: str):
         print("Not connected!")
         return
     print("SQL: ", sql)
-    cur.execute(sql)
-    conn.commit()
+    try:
+        cur.execute(sql)
+    except Exception as e:
+        print(e)
 
 
 def result():

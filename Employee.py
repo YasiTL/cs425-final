@@ -112,22 +112,30 @@ class Employee:
             return
 
         DB.execute(Query.FIND(Relation.HAS, self.e_id))
-        self.Dependents = DB.result()
+        res = DB.result()
+
+        for d in res:
+            self.Dependents.add(str(d[1]))
 
         DB.execute(Query.FIND(Multivalue.EMPLOYEE_PHONE, self.e_id))
-        self.PhoneNumbers = DB.result()
+        res = DB.result()
+        for p in res:
+            self.PhoneNumbers.add(str(p[1]))
 
         DB.execute(Query.FIND(Multivalue.EMPLOYEE_BENEFIT_SELECTION, self.e_id))
-        self.Benefits = DB.result()
+        res = DB.result()
+        for b in res:
+            self.Benefits.add(str(b[1]))
 
     def addDependent(self, d_id: str):
         self.Dependents.add(d_id)
 
     def addPhoneNumber(self, phoneNum: int):
-        self.PhoneNumbers.add(phoneNum)
+        self.PhoneNumbers.add(str(phoneNum))
+        print("Phonenumbers", self.PhoneNumbers)
 
     def addBenefit(self, benefit: DataType.BenefitSelection):
-        self.Benefits.add(benefit)
+        self.Benefits.add(str(benefit.value))
 
     def removeDependent(self, d_id: str):
         try:
@@ -143,9 +151,18 @@ class Employee:
 
     def removeBenefit(self, benefit: DataType.BenefitSelection):
         try:
-            self.Benefits.remove(benefit)
+            self.Benefits.remove(str(benefit.value))
         except KeyError:
             pass
+
+    def removeAllDependents(self):
+        self.Dependents.clear()
+
+    def removeAllPhoneNumbers(self):
+        self.PhoneNumbers.clear()
+
+    def removeAllBenefits(self):
+        self.Benefits.clear()
 
     def create(self):
         if self.exists:
@@ -186,42 +203,50 @@ class Employee:
         if not self.exists:
             print("Employee does not exist yet, did you mean to create?")
             return
-        self.first_name = "first_name='{}'".format(self.first_name)
-        self.last_name = "last_name='{}'".format(self.last_name)
-        self.ssn = "ssn='{}'".format(self.ssn)
-        self.job_title = "job_title='{}'".format(self.job_title)
-        self.salary_type = "salary_type='{}'".format(self.salary_type)
-        self.insurancePlan = "insurancePlan='{}'".format(self.insurancePlan)
-        self.email = "email='{}'".format(self.email)
-        self.country = "country='{}'".format(self.country)
-        self.state = "state='{}'".format(self.state)
-        self.street_name = "street_name='{}'".format(self.street_name)
-        self.postal_code = "postal_code='{}'".format(self.postal_code)
-        self.F01k_deduction = "F01k_deduction='{}'".format(self.F01k_deduction)
+        _first_name = "first_name='{}'".format(self.first_name)
+        _last_name = "last_name='{}'".format(self.last_name)
+        _ssn = "ssn='{}'".format(self.ssn)
+        _job_title = "job_title='{}'".format(self.job_title)
+        _salary_type = "salary_type='{}'".format(self.salary_type)
+        _insurancePlan = "insurancePlan='{}'".format(self.insurancePlan)
+        _email = "email='{}'".format(self.email)
+        _country = "country='{}'".format(self.country)
+        _state = "state='{}'".format(self.state)
+        _street_name = "street_name='{}'".format(self.street_name)
+        _postal_code = "postal_code='{}'".format(self.postal_code)
+        _F01k_deduction = "F01k_deduction='{}'".format(self.F01k_deduction)
         DB.execute(
             Query.UPDATE_SINGLE(
                 Entity.EMPLOYEE,
                 self.e_id,
-                self.first_name,
-                self.last_name,
-                self.ssn,
-                self.job_title,
-                self.salary_type,
-                self.insurancePlan,
-                self.email,
-                self.country,
-                self.state,
-                self.street_name,
-                self.postal_code,
-                self.F01k_deduction,
+                _first_name,
+                _last_name,
+                _ssn,
+                _job_title,
+                _salary_type,
+                _insurancePlan,
+                _email,
+                _country,
+                _state,
+                _street_name,
+                _postal_code,
+                _F01k_deduction,
             )
         )
 
-        # for d in self.Dependents:
-        #     DB.execute(Query.CREATE(Relation.HAS, self.e_id, d))
+        # TODO: Only modify tables that actually changed
 
-        # for p in self.PhoneNumbers:
-        #     DB.execute(Query.CREATE(Multivalue.EMPLOYEE_PHONE, self.e_id, p))
+        DB.execute(Query.DELETE(Relation.HAS, "e_id='{}'".format(self.e_id)))
 
-        # for b in self.Benefits:
-        #     DB.execute(Query.CREATE(Multivalue.EMPLOYEE_BENEFIT_SELECTION, self.e_id, b))
+        DB.execute(Query.DELETE(Multivalue.EMPLOYEE_PHONE, "e_id='{}'".format(self.e_id)))
+
+        DB.execute(Query.DELETE(Multivalue.EMPLOYEE_BENEFIT_SELECTION, "e_id='{}'".format(self.e_id)))
+
+        for d in self.Dependents:
+            DB.execute(Query.CREATE(Relation.HAS, self.e_id, d))
+
+        for p in self.PhoneNumbers:
+            DB.execute(Query.CREATE(Multivalue.EMPLOYEE_PHONE, self.e_id, p))
+
+        for b in self.Benefits:
+            DB.execute(Query.CREATE(Multivalue.EMPLOYEE_BENEFIT_SELECTION, self.e_id, b))
