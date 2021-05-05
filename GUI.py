@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 from functools import partial
 from postGres import DataType
 from Employee import Employee
@@ -301,6 +302,18 @@ class AddUserPage(tk.Frame):
         self.F01k_deduction = tk.Entry(self.frame)
         self.F01k_deduction.grid(row=13, column=1)
 
+        self.DependentsTreeview = ListboxEditable(self.frame, list(), 15, 0)
+        self.PhoneNumbersTreeview = ListboxEditable(self.frame, list(), 15, 1)
+        self.BenefitsTreeview = ListboxEditable(self.frame, list(), 15, 2)
+
+        tk.Button(self.frame, text="Add Dependent", command=self.DependentsTreeview.addPlaceRow).grid(row=14, column=0)
+        tk.Button(self.frame, text="Add Number", command=self.PhoneNumbersTreeview.addPlaceRow).grid(row=14, column=1)
+        tk.Button(self.frame, text="Add Benefit", command=self.BenefitsTreeview.addPlaceRow).grid(row=14, column=2)
+
+        self.DependentsTreeview.placeListBoxEditable()
+        self.PhoneNumbersTreeview.placeListBoxEditable()
+        self.BenefitsTreeview.placeListBoxEditable()
+
         def create():
             newBoi = Employee(
                 self.e_id.get(),
@@ -317,6 +330,9 @@ class AddUserPage(tk.Frame):
                 int(self.postal_code.get()),
                 int(self.F01k_deduction.get()),
             )
+            newBoi.Dependents = set(self.DependentsTreeview.getList())
+            newBoi.PhoneNumbers = set(self.PhoneNumbersTreeview.getList())
+            newBoi.Benefits = set(self.BenefitsTreeview.getList())
             newBoi.create()
 
         def back():
@@ -336,6 +352,98 @@ class AddUserPage(tk.Frame):
         enterCallback = None
         self.frame.grid_forget()
         ManageUsers(master=self.master, app=self.app).start()
+
+
+# Colors
+colorActiveTab = "#CCCCCC"  # Color of the active tab
+colorNoActiveTab = "#EBEBEB"  # Color of the no active tab
+
+
+class ListboxEditable(object):
+    """A class that emulates a listbox, but you can also edit a field"""
+
+    def __init__(self, frameMaster, _list, row, column):
+        self.frameMaster = frameMaster
+        self.list = list(_list)
+        self.rows = list()
+        self.row = row
+        self.column = column
+
+        i = 0
+        for row in self.list:
+            self.addRow(row)
+
+            i = i + 1
+
+    def addRow(self, text):
+        row = tk.Label(
+            self.frameMaster,
+            text=text,
+            bg=colorActiveTab,
+            fg="black",
+            width=10,
+        )
+        self.rows.append(row)
+
+        row.bind("<Button-1>", lambda event, a=row: self.changeBackground(a))
+        row.bind("<Double-1>", lambda event, a=row: self.changeToEntry(a))
+        row.bind("<Delete>", lambda event, a=row: self.delete(a))
+        return row
+
+    def addPlaceRow(self, text="Edit Me"):
+        newRow = self.addRow(text)
+        newRow.grid(row=self.row + len(self.rows) - 1, column=self.column)
+
+    def getRowPos(self, row):
+        ind = self.row
+        for _row in self.rows:
+            if row == _row:
+                return ind
+            ind = ind + 1
+
+    # Place
+    def placeListBoxEditable(self):
+        ind = self.row
+        for row in self.rows:
+            row.grid(row=ind, column=self.column)
+            ind = ind + 1
+        return ind
+
+    # Action to do when one click
+    def changeBackground(self, row):
+        for _row in self.rows:
+            _row.configure(bg=colorActiveTab)
+
+        row.configure(bg=colorNoActiveTab)
+        row.focus_set()
+
+    # Action to do when double-click
+    def changeToEntry(self, row):
+        self.entryVar = tk.StringVar()
+        self.entryActive = ttk.Entry(self.frameMaster, textvariable=self.entryVar, width=10)
+        self.entryActive.grid(row=self.getRowPos(row), column=self.column)
+        self.entryActive.focus_set()
+        self.entryActive.insert(0, row.cget("text"))
+
+        self.entryActive.bind("<FocusOut>", lambda event, a=row: self.saveEntryValue(a))
+        self.entryActive.bind("<Return>", lambda event, a=row: self.saveEntryValue(a))
+
+    # Action to do when focus out from the entry
+    def saveEntryValue(self, row):
+        self.entryActive.grid_forget()
+        row.grid(row=self.getRowPos(row), column=self.column)
+        row.configure(text=self.entryVar.get())
+
+    def delete(self, row):
+        row.grid_remove()  # TODO: improve placement, shift rows up when deleted
+        row.pack_forget()
+        self.rows.remove(row)
+
+    def getList(self):
+        rtn = list()
+        for row in self.rows:
+            rtn.append(row["text"])
+        return rtn
 
 
 class EditUserPage(tk.Frame):
@@ -440,6 +548,18 @@ class EditUserPage(tk.Frame):
         self.F01k_deduction.insert(0, currentEmployee.F01k_deduction)
         self.F01k_deduction.grid(row=13, column=1)
 
+        self.DependentsTreeview = ListboxEditable(self.frame, list(currentEmployee.Dependents), 15, 0)
+        self.PhoneNumbersTreeview = ListboxEditable(self.frame, list(currentEmployee.PhoneNumbers), 15, 1)
+        self.BenefitsTreeview = ListboxEditable(self.frame, list(currentEmployee.Benefits), 15, 2)
+
+        tk.Button(self.frame, text="Add Dependent", command=self.DependentsTreeview.addPlaceRow).grid(row=14, column=0)
+        tk.Button(self.frame, text="Add Number", command=self.PhoneNumbersTreeview.addPlaceRow).grid(row=14, column=1)
+        tk.Button(self.frame, text="Add Benefit", command=self.BenefitsTreeview.addPlaceRow).grid(row=14, column=2)
+
+        self.DependentsTreeview.placeListBoxEditable()
+        self.PhoneNumbersTreeview.placeListBoxEditable()
+        self.BenefitsTreeview.placeListBoxEditable()
+
         tk.Button(self.frame, text="Update", command=self.update).grid(sticky="s")
         tk.Button(self.frame, text="Back", command=self.go_back).grid(sticky="s")
 
@@ -457,17 +577,20 @@ class EditUserPage(tk.Frame):
         currentEmployee.street_name = self.street_name.get()
         currentEmployee.postal_code = self.postal_code.get()
         currentEmployee.F01k_deduction = self.F01k_deduction.get()
+        currentEmployee.Dependents = set(self.DependentsTreeview.getList())
+        currentEmployee.PhoneNumbers = set(self.PhoneNumbersTreeview.getList())
+        currentEmployee.Benefits = set(self.BenefitsTreeview.getList())
         currentEmployee.update()
 
     def start(self):
-        global enterCallback
-        enterCallback = self.update
+        # global enterCallback
+        # enterCallback = self.update
         self.topLabel.configure(text="Edit User : {}".format(currentEmployee.toString()))
         self.frame.grid(row=1, column=1)
 
     def go_back(self):
-        global enterCallback
-        enterCallback = None
+        # global enterCallback
+        # enterCallback = None
         self.frame.grid_forget()
         UserPage(master=self.master, app=self.app).start()
 
