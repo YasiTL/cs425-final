@@ -50,7 +50,7 @@ class SignIn(tk.Frame):
             Auth.signIn(user.get(), passw.get())
             if Auth.getTitle():
                 enterCallback = None
-            self.make_Menu()
+                self.make_Menu()
 
         enterCallback = signIn
 
