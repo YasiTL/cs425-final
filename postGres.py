@@ -63,7 +63,6 @@ class DataType:
         ADMIN = "ADMIN"
         MANAGER = "MANAGER"
         EMPLOYEE = "EMPLOYEE"
-        VISION = "VISION"
 
     class Salary(Enum):
         HOURLY = "HOURLY"

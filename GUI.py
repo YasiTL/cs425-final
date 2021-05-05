@@ -1,5 +1,6 @@
 import tkinter as tk
 from functools import partial
+from postGres import DataType
 from Employee import Employee
 
 # Just set the current employee id + data at the start, so all of the pages can access the data.
@@ -191,6 +192,15 @@ class AddUserPage(tk.Frame):
 
         tk.Label(self.frame, text="Add User Page").grid(row=0, column=1)
 
+        titles = list(DataType.JobTitle)
+        payTypes = list(DataType.Salary)
+
+        title = tk.Variable(self.frame)
+        title.set(titles[0])
+
+        payType = tk.Variable(self.frame)
+        payType.set(payTypes[0])
+
         tk.Label(self.frame, text="eID").grid(row=0, column=0)
         self.e_id = tk.Entry(self.frame)
         self.e_id.grid(row=0, column=1)
@@ -208,12 +218,10 @@ class AddUserPage(tk.Frame):
         self.ssn.grid(row=3, column=1)
 
         tk.Label(self.frame, text="Job title").grid(row=4, column=0)
-        self.job_title = tk.Entry(self.frame)
-        self.job_title.grid(row=4, column=1)
+        tk.OptionMenu(self.frame, title, *titles).grid(row=4, column=1)
 
         tk.Label(self.frame, text="Salary type").grid(row=5, column=0)
-        self.salary_type = tk.Entry(self.frame)
-        self.salary_type.grid(row=5, column=1)
+        tk.OptionMenu(self.frame, payType, *payTypes).grid(row=5, column=1)
 
         tk.Label(self.frame, text="Insurance plan").grid(row=6, column=0)
         self.insurancePlan = tk.Entry(self.frame)
@@ -243,16 +251,14 @@ class AddUserPage(tk.Frame):
         self.F01k_deduction = tk.Entry(self.frame)
         self.F01k_deduction.grid(row=12, column=1)
 
-        from postGres import DataType
-
         def create():
             newBoi = Employee(
                 self.e_id.get(),
                 self.first_name.get(),
                 self.last_name.get(),
                 self.ssn.get(),
-                DataType.JobTitle(self.job_title.get().upper()),
-                DataType.Salary(self.salary_type.get().upper()),
+                title,
+                payType,
                 self.insurancePlan.get(),
                 self.email.get(),
                 self.country.get(),
