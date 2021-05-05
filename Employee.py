@@ -130,13 +130,22 @@ class Employee:
         self.Benefits.add(benefit)
 
     def removeDependent(self, d_id: str):
-        self.Dependents.remove(d_id)
+        try:
+            self.Dependents.remove(d_id)
+        except KeyError:
+            pass
 
     def removePhoneNumber(self, phoneNum: int):
-        self.PhoneNumbers.remove(phoneNum)
+        try:
+            self.PhoneNumbers.remove(phoneNum)
+        except KeyError:
+            pass
 
     def removeBenefit(self, benefit: DataType.BenefitSelection):
-        self.Benefits.remove(benefit)
+        try:
+            self.Benefits.remove(benefit)
+        except KeyError:
+            pass
 
     def create(self):
         if self.exists:
@@ -160,6 +169,18 @@ class Employee:
                 self.F01k_deduction,
             )
         )
+
+        if DB.result():
+            print("Created employee {}".format(self.e_id))
+
+        for d in self.Dependents:
+            DB.execute(Query.CREATE(Relation.HAS, self.e_id, d))
+
+        for p in self.PhoneNumbers:
+            DB.execute(Query.CREATE(Multivalue.EMPLOYEE_PHONE, self.e_id, p))
+
+        for b in self.Benefits:
+            DB.execute(Query.CREATE(Multivalue.EMPLOYEE_BENEFIT_SELECTION, self.e_id, b))
 
     def update(self):
         if not self.exists:
@@ -195,3 +216,12 @@ class Employee:
                 self.F01k_deduction,
             )
         )
+
+        # for d in self.Dependents:
+        #     DB.execute(Query.CREATE(Relation.HAS, self.e_id, d))
+
+        # for p in self.PhoneNumbers:
+        #     DB.execute(Query.CREATE(Multivalue.EMPLOYEE_PHONE, self.e_id, p))
+
+        # for b in self.Benefits:
+        #     DB.execute(Query.CREATE(Multivalue.EMPLOYEE_BENEFIT_SELECTION, self.e_id, b))

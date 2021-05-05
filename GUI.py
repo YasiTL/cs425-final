@@ -1,9 +1,11 @@
 import tkinter as tk
 from functools import partial
+from Employee import Employee
 
 # Just set the current employee id + data at the start, so all of the pages can access the data.
 g_currentEmployeeId = 1
 g_currentEmployeeData = ()
+
 
 class RootApp:
     def __init__(self, root=None):
@@ -18,6 +20,7 @@ class RootApp:
         self.frame.grid_forget()
         SignIn(master=root, app=self).start()
 
+
 class SignIn(tk.Frame):
     def __init__(self, master=None, app=None):
         self.master = master
@@ -25,14 +28,14 @@ class SignIn(tk.Frame):
         self.frame = tk.Frame(self.master)
 
         # Components
-        tk.Label(self.frame, text='Sign In').grid(row=1, column=1)
+        tk.Label(self.frame, text="Sign In").grid(row=1, column=1)
 
-        tk.Label(self.frame, text='Username').grid()
+        tk.Label(self.frame, text="Username").grid()
         tk.Entry(self.frame).grid(row=2, column=1)
 
-        tk.Label(self.frame, text='Password').grid()
-        tk.Entry(self.frame, show='*').grid(row=3, column=1)
-        tk.Button(self.frame, text='Login', command=self.make_Menu).grid(row=4, column=1)
+        tk.Label(self.frame, text="Password").grid()
+        tk.Entry(self.frame, show="*").grid(row=3, column=1)
+        tk.Button(self.frame, text="Login", command=self.make_Menu).grid(row=4, column=1)
 
         self.menuPage = Menu(master=self.master, app=self.app)
 
@@ -50,19 +53,16 @@ class Menu(tk.Frame):
         self.app = app
         self.frame = tk.Frame(self.master)
 
-        
-        tk.Label(self.frame, text='Menu').grid()
+        tk.Label(self.frame, text="Menu").grid()
 
         # Menu Options
-        tk.Button(self.frame, text='Company Spending Report', command=self.goToReport3Page).grid()
+        tk.Button(self.frame, text="Company Spending Report", command=self.goToReport3Page).grid()
         self.report3Page = Report_3(master=self.master, app=self.app)
 
-        tk.Button(self.frame, text='Manage Users',
-                  command=self.manageUsersPage).grid()
+        tk.Button(self.frame, text="Manage Users", command=self.manageUsersPage).grid()
         self.manageUsersPage = ManageUsers(master=self.master, app=self.app)
 
-        tk.Button(self.frame, text='Sign Out',
-                    command=self.goToSignInPage).grid()
+        tk.Button(self.frame, text="Sign Out", command=self.goToSignInPage).grid()
 
     def start(self):
         self.frame.grid(row=1, column=1)
@@ -82,7 +82,7 @@ class Menu(tk.Frame):
     def goToReport3Page(self):
         self.frame.grid_forget()
         self.report3Page.start()
-    
+
     def goToSignInPage(self):
         self.frame.grid_forget()
         SignIn(master=self.master, app=self.app).start()
@@ -95,18 +95,18 @@ class ManageUsers(tk.Frame):
         self.frame = tk.Frame(self.master)
 
         # Components
-        tk.Label(self.frame, text="Manage Users Page").grid(row=0, column=1, sticky = "n")
+        tk.Label(self.frame, text="Manage Users Page").grid(row=0, column=1, sticky="n")
 
-        tk.Button(self.frame, text='Add User', command=self.goToAddUserPage).grid(row=1, column=1)
+        tk.Button(self.frame, text="Add User", command=self.goToAddUserPage).grid(row=1, column=1)
 
-        tk.Label(self.frame, text='Search by employee id: ').grid(row=2, column=1, sticky="w", padx = (0, 260))
+        tk.Label(self.frame, text="Search by employee id: ").grid(row=2, column=1, sticky="w", padx=(0, 260))
 
         self.employeeIdSearchBox = tk.Entry(self.frame)
         self.employeeIdSearchBox.grid(row=2, column=1)
 
-        tk.Button(self.frame, text='Search', command=self.searchFunction).grid(row=2, column=1, padx = (200, 0))
+        tk.Button(self.frame, text="Search", command=self.searchFunction).grid(row=2, column=1, padx=(200, 0))
 
-        tk.Button(self.frame, text='Go Back', command=self.go_back).grid(row=3, column=1)
+        tk.Button(self.frame, text="Go Back", command=self.go_back).grid(row=3, column=1)
 
     def start(self):
         self.frame.grid(row=1, column=1)
@@ -114,22 +114,23 @@ class ManageUsers(tk.Frame):
     def go_back(self):
         self.frame.grid_forget()
         Menu(master=self.master, app=self.app).start()
-    
+
     def goToUserPage(self):
         self.frame.grid_forget()
         UserPage(master=self.master, app=self.app).start()
-    
+
     def goToAddUserPage(self):
         self.frame.grid_forget()
         AddUserPage(master=self.master, app=self.app).start()
 
     def searchFunction(self):
-        if (self.employeeIdSearchBox.get()):
+        if self.employeeIdSearchBox.get():
             # TODO: Do searching here
             print("Search Function must run on: ", self.employeeIdSearchBox.get())
             self.goToUserPage()
         else:
-            tk.Label(self.frame, text='Cannot find employee').grid(row=3, column=1, sticky = 's', pady = (50, 0))
+            tk.Label(self.frame, text="Cannot find employee").grid(row=3, column=1, sticky="s", pady=(50, 0))
+
 
 class UserPage(tk.Frame):
     def __init__(self, master=None, app=None):
@@ -138,28 +139,28 @@ class UserPage(tk.Frame):
         self.frame = tk.Frame(self.master)
 
         # Menu Options
-        tk.Label(self.frame, text="Edit Current User").grid(row=0, column=0, sticky = "n")
+        tk.Label(self.frame, text="Edit Current User").grid(row=0, column=0, sticky="n")
 
-        tk.Button(self.frame, text='Edit User', command=self.goToEditUserPage).grid()
+        tk.Button(self.frame, text="Edit User", command=self.goToEditUserPage).grid()
         self.report2Page = EditUserPage(master=self.master, app=self.app)
 
-        tk.Button(self.frame, text='Employee W2', command=self.goToReport1Page).grid()
+        tk.Button(self.frame, text="Employee W2", command=self.goToReport1Page).grid()
         self.report1Page = Report_1(master=self.master, app=self.app)
 
-        tk.Button(self.frame, text='Bi-Weekly Paycheck', command=self.goToReport2Page).grid()
+        tk.Button(self.frame, text="Bi-Weekly Paycheck", command=self.goToReport2Page).grid()
         self.report2Page = Report_2(master=self.master, app=self.app)
 
-        tk.Button(self.frame, text='Delete User', command=self.deleteUser).grid()
+        tk.Button(self.frame, text="Delete User", command=self.deleteUser).grid()
 
-        tk.Button(self.frame, text='Back to Employee Search', command=self.go_back).grid()
-    
+        tk.Button(self.frame, text="Back to Employee Search", command=self.go_back).grid()
+
     def start(self):
         self.frame.grid(row=1, column=1)
-    
+
     def go_back(self):
         self.frame.grid_forget()
         UserPage(master=self.master, app=self.app).start()
-    
+
     def manageUsersPage(self):
         self.frame.grid_forget()
         self.manageUsersPage.start()
@@ -171,15 +172,16 @@ class UserPage(tk.Frame):
     def goToReport2Page(self):
         self.frame.grid_forget()
         self.report2Page.start()
-    
+
     def goToEditUserPage(self):
         self.frame.grid_forget()
         EditUserPage(master=self.master, app=self.app).start()
-    
+
     def deleteUser(self):
         # TODO: Delete User
         print("DELETE USER")
         self.go_back
+
 
 class AddUserPage(tk.Frame):
     def __init__(self, master=None, app=None):
@@ -187,30 +189,82 @@ class AddUserPage(tk.Frame):
         self.app = app
         self.frame = tk.Frame(self.master)
 
-        tk.Label(self.frame, text='Add User Page').grid(row=0, column=1)
+        tk.Label(self.frame, text="Add User Page").grid(row=0, column=1)
 
-        # TODO: Place correct fields.
-        tk.Label(self.frame, text='First Name').grid(row=0, column=0)
-        self.firstNameField = tk.Entry(self.frame)
-        self.firstNameField.grid(row=0, column=1)
+        tk.Label(self.frame, text="eID").grid(row=0, column=0)
+        self.e_id = tk.Entry(self.frame)
+        self.e_id.grid(row=0, column=1)
 
-        tk.Label(self.frame, text='Last Name').grid(row=1, column=0)
-        self.lastNameField = tk.Entry(self.frame)
-        self.lastNameField.grid(row=1, column=1)
+        tk.Label(self.frame, text="First name").grid(row=1, column=0)
+        self.first_name = tk.Entry(self.frame)
+        self.first_name.grid(row=1, column=1)
 
-        tk.Label(self.frame, text='Address').grid(row=2, column=0)
-        self.addressField = tk.Entry(self.frame)
-        self.addressField.grid(row=2, column=1)
+        tk.Label(self.frame, text="Last name").grid(row=2, column=0)
+        self.last_name = tk.Entry(self.frame)
+        self.last_name.grid(row=2, column=1)
 
-        tk.Label(self.frame, text='Suffering').grid(row=3, column=0)
-        self.sufferingField = tk.Entry(self.frame)
-        self.sufferingField.grid(row=3, column=1)
+        tk.Label(self.frame, text="ssn").grid(row=3, column=0)
+        self.ssn = tk.Entry(self.frame)
+        self.ssn.grid(row=3, column=1)
 
-        tk.Label(self.frame, text='Test').grid(row=4, column=0)
-        self.testField = tk.Entry(self.frame)
-        self.testField.grid(row=4, column=1)
+        tk.Label(self.frame, text="Job title").grid(row=4, column=0)
+        self.job_title = tk.Entry(self.frame)
+        self.job_title.grid(row=4, column=1)
 
-        tk.Button(self.frame, text='Go Back', command=self.go_back).grid(sticky="s")
+        tk.Label(self.frame, text="Salary type").grid(row=5, column=0)
+        self.salary_type = tk.Entry(self.frame)
+        self.salary_type.grid(row=5, column=1)
+
+        tk.Label(self.frame, text="Insurance plan").grid(row=6, column=0)
+        self.insurancePlan = tk.Entry(self.frame)
+        self.insurancePlan.grid(row=6, column=1)
+
+        tk.Label(self.frame, text="Email").grid(row=7, column=0)
+        self.email = tk.Entry(self.frame)
+        self.email.grid(row=7, column=1)
+
+        tk.Label(self.frame, text="Country").grid(row=8, column=0)
+        self.country = tk.Entry(self.frame)
+        self.country.grid(row=8, column=1)
+
+        tk.Label(self.frame, text="State").grid(row=9, column=0)
+        self.state = tk.Entry(self.frame)
+        self.state.grid(row=9, column=1)
+
+        tk.Label(self.frame, text="Street Name").grid(row=10, column=0)
+        self.street_name = tk.Entry(self.frame)
+        self.street_name.grid(row=10, column=1)
+
+        tk.Label(self.frame, text="Postal Code").grid(row=11, column=0)
+        self.postal_code = tk.Entry(self.frame)
+        self.postal_code.grid(row=11, column=1)
+
+        tk.Label(self.frame, text="401k Deduction").grid(row=12, column=0)
+        self.F01k_deduction = tk.Entry(self.frame)
+        self.F01k_deduction.grid(row=12, column=1)
+
+        from postGres import DataType
+
+        def create():
+            newBoi = Employee(
+                self.e_id.get(),
+                self.first_name.get(),
+                self.last_name.get(),
+                self.ssn.get(),
+                DataType.JobTitle(self.job_title.get().upper()),
+                DataType.Salary(self.salary_type.get().upper()),
+                self.insurancePlan.get(),
+                self.email.get(),
+                self.country.get(),
+                self.state.get(),
+                self.street_name.get(),
+                self.postal_code.get(),
+                self.F01k_deduction.get(),
+            )
+            newBoi.create()
+
+        tk.Button(self.frame, text="Create", command=create).grid(sticky="s")
+        tk.Button(self.frame, text="Go Back", command=self.go_back).grid(sticky="s")
 
     def start(self):
         self.frame.grid(row=1, column=1)
@@ -219,22 +273,24 @@ class AddUserPage(tk.Frame):
         self.frame.grid_forget()
         ManageUsers(master=self.master, app=self.app).start()
 
+
 class EditUserPage(tk.Frame):
     def __init__(self, master=None, app=None):
         self.master = master
         self.app = app
         self.frame = tk.Frame(self.master)
 
-        tk.Label(self.frame, text='Edit User Page').grid(row=0, column=1)
+        tk.Label(self.frame, text="Edit User Page").grid(row=0, column=1)
         # TODO : ADD FIELDS, AND FILL THEM WITH CONTENT FROM THE DATABASE. ON SUBMIT, PUSH ALL THE DATA.
-        tk.Button(self.frame, text='Go back to Employee Page', command=self.go_back).grid(row=1, column=1)
-    
+        tk.Button(self.frame, text="Go back to Employee Page", command=self.go_back).grid(row=1, column=1)
+
     def start(self):
         self.frame.grid(row=1, column=1)
 
     def go_back(self):
         self.frame.grid_forget()
         UserPage(master=self.master, app=self.app).start()
+
 
 # Employee Bi weekly paycheck
 class Report_1(tk.Frame):
@@ -245,7 +301,7 @@ class Report_1(tk.Frame):
 
         # Components
         tk.Label(self.frame, text="Report 1").grid()
-        tk.Button(self.frame, text='Go back to Employee Dash', command=self.go_back).grid()
+        tk.Button(self.frame, text="Go back to Employee Dash", command=self.go_back).grid()
 
     def start(self):
         self.frame.grid(row=1, column=1)
@@ -253,6 +309,7 @@ class Report_1(tk.Frame):
     def go_back(self):
         self.frame.grid_forget()
         UserPage(master=self.master, app=self.app).start()
+
 
 # Employee W2
 class Report_2(tk.Frame):
@@ -263,7 +320,7 @@ class Report_2(tk.Frame):
 
         # Components
         tk.Label(self.frame, text="Report 2").grid()
-        tk.Button(self.frame, text='Go to Employee Dash', command=self.go_back).grid()
+        tk.Button(self.frame, text="Go to Employee Dash", command=self.go_back).grid()
 
     def start(self):
         self.frame.grid(row=1, column=1)
@@ -281,7 +338,7 @@ class Report_3(tk.Frame):
 
         # Components
         tk.Label(self.frame, text="Report 3").grid()
-        tk.Button(self.frame, text='Go Back', command=self.go_back).grid()
+        tk.Button(self.frame, text="Go Back", command=self.go_back).grid()
 
     def start(self):
         self.frame.grid(row=1, column=1)
@@ -289,6 +346,11 @@ class Report_3(tk.Frame):
     def go_back(self):
         self.frame.grid_forget()
         Menu(master=self.master, app=self.app).start()
+
+
+import postGres as DB
+
+DB.connect("99.127.217.73", "Payroll")
 
 root = tk.Tk()
 
