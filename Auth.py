@@ -13,7 +13,7 @@ def signIn(first_name: str, e_id: str):
         currentTitle = DataType.JobTitle(DB.result()[0][0])
         currentUser = first_name
         if currentTitle:
-            print("{} Signed in as {}".format(currentUser, currentTitle.value))
+            print(getString())
     except IndexError:
         print("Failed to Sign In")
         currentTitle = None
@@ -34,8 +34,9 @@ def getUser():
 
     Returns `None` if no one is signed in
     """
-    
+
     return currentUser
+
 
 def getTitle():
     global currentTitle, currentUser
@@ -44,3 +45,14 @@ def getTitle():
     Returns `None` if employee does not exist, or no one is signed in
     """
     return currentTitle
+
+
+def getString():
+    global currentTitle, currentUser
+    """Get the string representation of who is signed in
+
+    Returns `Signed out` if no one is signed in
+    """
+    if currentUser == None or currentTitle == None:
+        return "Signed out"
+    return "{} Signed in as {}".format(currentUser, currentTitle.value)

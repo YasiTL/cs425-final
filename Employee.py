@@ -209,6 +209,12 @@ class Employee:
         for b in self.Benefits:
             DB.execute(Query.CREATE(Multivalue.EMPLOYEE_BENEFIT_SELECTION, self.e_id, b))
 
+    def toString(self):
+        if self.badSetup:
+            print("Employee is invalid")
+            return
+        return "{} {} | eID:{}".format(self.first_name, self.last_name, self.e_id)
+
     def update(self):
         if self.badSetup:
             print("Employee is invalid")
