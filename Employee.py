@@ -5,7 +5,6 @@ import postGres as DB
 class Employee:
 
     badSetup = False
-
     exists = False
 
     e_id = None
