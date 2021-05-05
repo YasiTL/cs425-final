@@ -495,6 +495,7 @@ class EditUserPage(tk.Frame):
         self.e_id = tk.Entry(self.frame)
         self.e_id.insert(0, currentEmployee.e_id)
         self.e_id.grid(row=1, column=1)
+        self.e_id.configure(state='disable')
 
         tk.Label(self.frame, text="First name").grid(row=2, column=0)
         self.first_name = tk.Entry(self.frame)
