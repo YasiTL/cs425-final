@@ -3,6 +3,7 @@ from functools import partial
 from postGres import DataType
 from Employee import Employee
 import postGres as DB
+import Auth
 
 # Just set the current employee id + data at the start, so all of the pages can access the data.
 g_currentEmployeeId = 1
@@ -33,11 +34,19 @@ class SignIn(tk.Frame):
         tk.Label(self.frame, text="Sign In").grid(row=1, column=1)
 
         tk.Label(self.frame, text="Username").grid()
-        tk.Entry(self.frame).grid(row=2, column=1)
+        user = tk.Entry(self.frame)
+        user.grid(row=2, column=1)
 
         tk.Label(self.frame, text="Password").grid()
-        tk.Entry(self.frame, show="*").grid(row=3, column=1)
-        tk.Button(self.frame, text="Login", command=self.make_Menu).grid(row=4, column=1)
+        passw = tk.Entry(self.frame, show="*")
+        passw.grid(row=3, column=1)
+
+        def signIn():
+            Auth.signIn(user.get(), passw.get())
+            if Auth.getTitle():
+                self.make_Menu()
+
+        tk.Button(self.frame, text="Login", command=signIn).grid(row=4, column=1)
 
         self.menuPage = Menu(master=self.master, app=self.app)
 
@@ -64,7 +73,11 @@ class Menu(tk.Frame):
         tk.Button(self.frame, text="Manage Users", command=self.manageUsersPage).grid()
         self.manageUsersPage = ManageUsers(master=self.master, app=self.app)
 
-        tk.Button(self.frame, text="Sign Out", command=self.goToSignInPage).grid()
+        def signOut():
+            Auth.signOut()
+            self.goToSignInPage()
+
+        tk.Button(self.frame, text="Sign Out", command=signOut).grid()
 
     def start(self):
         self.frame.grid(row=1, column=1)
@@ -357,6 +370,7 @@ class Report_3(tk.Frame):
     def go_back(self):
         self.frame.grid_forget()
         Menu(master=self.master, app=self.app).start()
+
 
 def init():
     root = tk.Tk()

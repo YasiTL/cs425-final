@@ -14,22 +14,22 @@ def main():
 
     GUI.init()
 
-    Auth.signIn("Yasi", 1234567)
+    # Auth.signIn("Yasi", 1234567)
 
-    clearance = Auth.getTitle()
+    # clearance = Auth.getTitle()
 
-    if clearance == DataType.JobTitle.ADMIN:
-        print("is Admin")
+    # if clearance == DataType.JobTitle.ADMIN:
+    #     print("is Admin")
 
-    e1 = Employee(1234567)
+    # e1 = Employee(1234567)
 
-    e1.addPhoneNumber(76)
-    e1.addPhoneNumber(46478)
-    e1.addBenefit(DataType.BenefitSelection.DENTAL)
-    e1.addDependent("someDep")
-    e1.addDependent("2222222")
+    # e1.addPhoneNumber(76)
+    # e1.addPhoneNumber(46478)
+    # e1.addBenefit(DataType.BenefitSelection.DENTAL)
+    # e1.addDependent("someDep")
+    # e1.addDependent("2222222")
 
-    e1.update()
+    # e1.update()
 
     # e0 = Employee(
     #     "newBoi",
