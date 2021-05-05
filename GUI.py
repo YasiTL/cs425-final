@@ -5,10 +5,7 @@ from Employee import Employee
 import postGres as DB
 import Auth
 
-# Just set the current employee id + data at the start, so all of the pages can access the data.
-g_currentEmployeeId = 1
-g_currentEmployeeData = ()
-
+currentEmployee = Employee
 enterCallback = None
 
 
@@ -148,9 +145,9 @@ class ManageUsers(tk.Frame):
 
     def searchFunction(self):
         if self.employeeIdSearchBox.get():
-            # TODO: Do searching here
-            print("Search Function must run on: ", self.employeeIdSearchBox.get())
-            self.goToUserPage()
+            currentEmployee = Employee(self.employeeIdSearchBox.get())
+            if currentEmployee.exists:
+                self.goToUserPage()
         else:
             tk.Label(self.frame, text="Cannot find employee").grid(row=3, column=1, sticky="s", pady=(50, 0))
 

@@ -67,6 +67,7 @@ class Employee:
             ):
                 print("Employee does not exist")
                 self.badSetup = True
+                self.exists = False
                 return
             self.first_name = first_name
             self.last_name = last_name
@@ -83,6 +84,7 @@ class Employee:
             if type(postal_code) != int or type(F01k_deduction) != int:
                 print("Bad parameter types")
                 self.badSetup = True
+                self.exists = False
         else:
             print("Employee found")
             self.exists = self.exists[0]
@@ -104,12 +106,14 @@ class Employee:
         if not found:
             print("Employee State {} not found".format(self.state))
             self.badSetup = True
+            self.exists = False
 
         DB.execute(Query.FIND(Entity.INSURNACE_PLAN, self.insurancePlan))
         found = DB.result()
         if not found:
             print("Employee State {} not found".format(self.insurancePlan))
             self.badSetup = True
+            self.exists = False
 
         if self.badSetup:
             return
