@@ -80,6 +80,9 @@ class Employee:
             self.street_name = street_name
             self.postal_code = postal_code
             self.F01k_deduction = F01k_deduction
+            if type(postal_code) != int or type(F01k_deduction) != int:
+                print("Bad parameter types")
+                self.badSetup = True
         else:
             print("Employee found")
             self.exists = self.exists[0]
@@ -165,6 +168,9 @@ class Employee:
         self.Benefits.clear()
 
     def create(self):
+        if self.badSetup:
+            print("Employee is invalid")
+            return
         if self.exists:
             print("Employee already created, did you mean to update?")
             return
@@ -200,6 +206,9 @@ class Employee:
             DB.execute(Query.CREATE(Multivalue.EMPLOYEE_BENEFIT_SELECTION, self.e_id, b))
 
     def update(self):
+        if self.badSetup:
+            print("Employee is invalid")
+            return
         if not self.exists:
             print("Employee does not exist yet, did you mean to create?")
             return

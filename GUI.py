@@ -50,7 +50,7 @@ class SignIn(tk.Frame):
             Auth.signIn(user.get(), passw.get())
             if Auth.getTitle():
                 enterCallback = None
-                self.make_Menu()
+            self.make_Menu()
 
         enterCallback = signIn
 
@@ -215,17 +215,35 @@ class AddUserPage(tk.Frame):
         tk.Label(self.frame, text="Add User Page").grid(row=0, column=1)
 
         titles = list()
+        payTypes = list()
+        insurances = list()
+        states = list()
+
         for t in list(DataType.JobTitle):
             titles.append(t.value)
-        payTypes = list()
+
         for s in list(DataType.Salary):
             payTypes.append(s.value)
+
+        DB.execute(DB.Query.SELECT(DB.Entity.INSURNACE_PLAN, "*"))
+        for i in DB.result():
+            insurances.append(i[0])
+
+        DB.execute(DB.Query.SELECT(DB.Entity.STATE, "*"))
+        for s in DB.result():
+            states.append(s[0])
 
         title = tk.StringVar(self.frame)
         title.set(titles[0])
 
         payType = tk.StringVar(self.frame)
         payType.set(payTypes[0])
+
+        insurance = tk.StringVar(self.frame)
+        insurance.set(insurances[0])
+
+        state = tk.StringVar(self.frame)
+        state.set(states[0])
 
         tk.Label(self.frame, text="eID").grid(row=0, column=0)
         self.e_id = tk.Entry(self.frame)
@@ -250,8 +268,7 @@ class AddUserPage(tk.Frame):
         tk.OptionMenu(self.frame, payType, *payTypes).grid(row=5, column=1)
 
         tk.Label(self.frame, text="Insurance plan").grid(row=6, column=0)
-        self.insurancePlan = tk.Entry(self.frame)
-        self.insurancePlan.grid(row=6, column=1)
+        tk.OptionMenu(self.frame, insurance, *insurances).grid(row=6, column=1)
 
         tk.Label(self.frame, text="Email").grid(row=7, column=0)
         self.email = tk.Entry(self.frame)
@@ -262,8 +279,7 @@ class AddUserPage(tk.Frame):
         self.country.grid(row=8, column=1)
 
         tk.Label(self.frame, text="State").grid(row=9, column=0)
-        self.state = tk.Entry(self.frame)
-        self.state.grid(row=9, column=1)
+        tk.OptionMenu(self.frame, state, *states).grid(row=9, column=1)
 
         tk.Label(self.frame, text="Street Name").grid(row=10, column=0)
         self.street_name = tk.Entry(self.frame)
@@ -285,18 +301,27 @@ class AddUserPage(tk.Frame):
                 self.ssn.get(),
                 DataType.JobTitle(title.get().upper()),
                 DataType.Salary(payType.get().upper()),
-                self.insurancePlan.get(),
+                insurance.get(),
                 self.email.get(),
                 self.country.get(),
-                self.state.get(),
+                state.get(),
                 self.street_name.get(),
-                self.postal_code.get(),
-                self.F01k_deduction.get(),
+                int(self.postal_code.get()),
+                int(self.F01k_deduction.get()),
             )
             newBoi.create()
 
+        global enterCallback
+
+        enterCallback = create
+
+        def back():
+            global enterCallback
+            enterCallback = None
+            self.go_back()
+
         tk.Button(self.frame, text="Create", command=create).grid(sticky="s")
-        tk.Button(self.frame, text="Go Back", command=self.go_back).grid(sticky="s")
+        tk.Button(self.frame, text="Go Back", command=back).grid(sticky="s")
 
     def start(self):
         self.frame.grid(row=1, column=1)
