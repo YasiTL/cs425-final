@@ -192,13 +192,17 @@ class AddUserPage(tk.Frame):
 
         tk.Label(self.frame, text="Add User Page").grid(row=0, column=1)
 
-        titles = list(DataType.JobTitle)
-        payTypes = list(DataType.Salary)
+        titles = list()
+        for t in list(DataType.JobTitle):
+            titles.append(t.value)
+        payTypes = list()
+        for s in list(DataType.Salary):
+            payTypes.append(s.value)
 
-        title = tk.Variable(self.frame)
+        title = tk.StringVar(self.frame)
         title.set(titles[0])
 
-        payType = tk.Variable(self.frame)
+        payType = tk.StringVar(self.frame)
         payType.set(payTypes[0])
 
         tk.Label(self.frame, text="eID").grid(row=0, column=0)
@@ -257,8 +261,8 @@ class AddUserPage(tk.Frame):
                 self.first_name.get(),
                 self.last_name.get(),
                 self.ssn.get(),
-                title.get(),
-                payType.get(),
+                DataType.JobTitle(title.get().upper()),
+                DataType.Salary(payType.get().upper()),
                 self.insurancePlan.get(),
                 self.email.get(),
                 self.country.get(),
