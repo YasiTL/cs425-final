@@ -51,7 +51,7 @@ class Relation(Enum):
     PICKS_PLAN = ("picks_plan_r", ("e_id", "plan_id"))
 
 
-class DataType(Enum):
+class DataType:
     class BenefitSelection(Enum):
         F01K_CONTRIBUTION = "401K_CONTRIBUTION"
         ATTORNEY_PLAN = "ATTORNEY_PLAN"
@@ -72,7 +72,7 @@ class DataType(Enum):
 
 class Query:
     @staticmethod
-    def CREATE(entity: Entity, *args):
+    def CREATE(entity: Enum, *args):
         """SQL Create given the entity table and the appropriate initalizing parameters
 
         Ex: `Query.CREATE(Entity.STATE, "illinois", "456")`
@@ -83,18 +83,33 @@ class Query:
         return "insert into {}{} values {} returning *;".format(entity.value[0], str(entity.value[1]).replace("'", ""), str(args))
 
     @staticmethod
-    def UPDATE(entity: Entity, conditional: str, *args):
+    def UPDATE(entity: Enum, conditional: str, *args):
         """SQL Update given the entity table, the SQL conditional for selection, and the paremeters to set
 
         Ex: `Query.UPDATE(Entity.STATE, "state_name='illinois'", "tax_rate=753.12")`
         """
         sets = ""
         for s in args:
-            sets += s + " "
+            if s:
+                sets += s + ", "
+        sets = sets.strip(" ,")
         return "update {} set {} where {} returning *;".format(entity.value[0], sets, conditional)
 
     @staticmethod
-    def DELETE(entity: Entity, conditional: str):
+    def UPDATE_SINGLE(entity: Enum, primary_key: str, *args):
+        """SQL Update a single entity given it's single primary key and the paremeters to set
+
+        Ex: `Query.UPDATE(Entity.STATE, "illinois", "tax_rate=753.12")`
+        """
+        sets = ""
+        for s in args:
+            if s:
+                sets += s + ", "
+        sets = sets.strip(" ,")
+        return "update {} set {} where {} returning *;".format(entity.value[0], sets, "{}='{}'".format(entity.value[1][0], primary_key))
+
+    @staticmethod
+    def DELETE(entity: Enum, conditional: str):
         """SQL Delete given the entity table and the SQL conditional for selection
 
         Ex: `Query.DELETE(Entity.STATE, "state_name='illinois'")`
@@ -102,48 +117,71 @@ class Query:
         return "delete from {} where {} returning *;".format(entity.value[0], conditional)
 
     @staticmethod
-    def SELECT(entity: Entity, *args):
-        """SQL Select given the entity table and which columns to return
+    def SELECT(entity: Enum, *args):
+        """SQL Select given the entity table and which columns to return (returns all by default)
 
         Ex: `Query.SELECT(Entity.STATE, "*")`
         """
+        if len(args) == 0:
+            args = "*"
         return "select {} FROM {};".format(str(args).strip("()").removesuffix(",").replace("'", ""), entity.value[0])
 
     @staticmethod
-    def SELECT_WHERE(entity: Entity, conditional: str, *args):
-        """SQL Select given the entity table, the conditional , and which columns to return
+    def SELECT_WHERE(entity: Enum, conditional: str, *args):
+        """SQL Select given the entity table, the conditional , and which columns to return (returns all by default)
 
-        Ex: `Query.SELECT_WHERE(Entity.STATE,"e_id='1234567'", "*")`
+        Ex: `Query.SELECT_WHERE(Entity.EMPLOYEE,"e_id='1234567'", "*")`
         """
+        if len(args) == 0:
+            args = "*"
         return "select {} FROM {} WHERE {};".format(str(args).strip("()").removesuffix(",").replace("'", ""), entity.value[0], conditional)
 
+    @staticmethod
+    def FIND(entity: Enum, primary_key: str, *args):
+        """Find an entity given it's single primary key, and which columns to return (returns all by default)
 
-class PostGresDB:
-    conn = cur = None
+        Ex: `Query.FIND(Entity.STATE, "illinois", "*")`
+        """
+        if len(args) == 0:
+            args = "*"
+        return "select {} FROM {} WHERE {};".format(
+            str(args).strip("()").removesuffix(",").replace("'", ""), entity.value[0], "{}='{}'".format(entity.value[1][0], primary_key)
+        )
 
-    def __init__(self, ip: str, schema: str):
+
+conn = None
+cur = None
+
+
+def connect(ip: str, schema: str):
+    global conn, cur
+    if not conn:
         print("Connecting to postgres@{}".format(ip))
-        self.conn = psycopg.connect(host=ip, database="postgres", user="postgres", password="postgres")
-        self.cur = self.conn.cursor()
-        self.cur.execute("set schema '{}'".format(schema))
+        conn = psycopg.connect(host=ip, database="postgres", user="postgres", password="postgres")
+        cur = conn.cursor()
+        cur.execute("set schema '{}'".format(schema))
+    else:
+        print("Already connected")
 
-    def exec(self, sql: str):
-        """Execute an SQL statement"""
-        print("SQL: ", sql)
-        self.cur.execute(sql)
-        self.conn.commit()
-        # val = self.result()
-        # print(val)
-        # if type(val) == "list":
-        # return val
 
-    def result(self):
-        """Returns whatever result an execution returns, if any"""
-        try:
-            return self.cur.fetchall()
-        except psycopg.ProgrammingError:
-            return None
+def execute(sql: str):
+    global conn, cur
+    """Execute an SQL statement"""
+    print("SQL: ", sql)
+    cur.execute(sql)
+    conn.commit()
 
-    def close(self):
-        self.cur.close()
-        self.conn.close()
+
+def result():
+    global conn, cur
+    """Returns whatever result an execution returns, if any"""
+    try:
+        return cur.fetchall()
+    except psycopg.ProgrammingError:
+        return None
+
+
+def close():
+    global conn, cur
+    cur.close()
+    conn.close()
