@@ -23,7 +23,7 @@ class Dependent:
     ):
         """ Initialize a new Dependent to be created or updated"""
         self.d_id = d_id
-        DB.execute(Query.SELECT_WHERE(Entity.EMPLOYEE, "d_id='{}'".format(d_id), "*"))
+        DB.execute(Query.SELECT_WHERE(Entity.DEPENDENT, "d_id='{}'".format(d_id), "*"))
         self.exists = DB.result()
 
         if self.exists and first_name:
