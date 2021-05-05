@@ -9,6 +9,8 @@ import Auth
 g_currentEmployeeId = 1
 g_currentEmployeeData = ()
 
+enterCallback = None
+
 
 class RootApp:
     def __init__(self, root=None):
@@ -26,6 +28,8 @@ class RootApp:
 
 class SignIn(tk.Frame):
     def __init__(self, master=None, app=None):
+        global enterCallback
+
         self.master = master
         self.app = app
         self.frame = tk.Frame(self.master)
@@ -42,9 +46,13 @@ class SignIn(tk.Frame):
         passw.grid(row=3, column=1)
 
         def signIn():
+            global enterCallback
             Auth.signIn(user.get(), passw.get())
             if Auth.getTitle():
+                enterCallback = None
                 self.make_Menu()
+
+        enterCallback = signIn
 
         tk.Button(self.frame, text="Login", command=signIn).grid(row=4, column=1)
 
@@ -380,6 +388,12 @@ def init():
     root.grid_rowconfigure(2, weight=1)
     root.grid_columnconfigure(0, weight=1)
     root.grid_columnconfigure(2, weight=1)
+
+    def func(event):
+        if enterCallback != None:
+            enterCallback()
+
+    root.bind("<Return>", func)
 
     app = RootApp(root=root)
     root.mainloop()
