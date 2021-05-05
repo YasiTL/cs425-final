@@ -3,6 +3,7 @@ from postGres import Query, Entity, Multivalue, Relation, DataType
 import postGres as DB
 import Auth
 from Employee import Employee
+from Dependent import Dependent
 import GUI
 
 
@@ -13,6 +14,10 @@ def main():
     DB.connect(sys.argv[1], "Payroll")
 
     GUI.init()
+    
+    # d0 = Dependent("someDep")
+    # d0.first_name = "whahahah"
+    # d0.update()
 
     # Auth.signIn("Yasi", 1234567)
 
