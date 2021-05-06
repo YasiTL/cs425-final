@@ -1,8 +1,12 @@
 from postGres import Query, Entity, Multivalue, Relation, DataType
 import postGres as DB
+from Log import log
+
 
 
 class Employee:
+
+    ID = "Employee"
 
     badSetup = False
     exists = False
@@ -21,6 +25,7 @@ class Employee:
     postal_code = None
     F01k_deduction = None
     rate = None
+    hours = None
 
     Dependents = set()
     PhoneNumbers = set()
@@ -42,6 +47,7 @@ class Employee:
         postal_code: int = None,
         F01k_deduction: int = None,
         rate: float = None,
+        hours: int = None,
     ):
         """ Initialize a new Employee to be created or updated"""
         self.e_id = e_id
@@ -49,7 +55,7 @@ class Employee:
         self.exists = DB.result()
 
         if self.exists and first_name:
-            print("Warning: Employee already exists but options parameters were still passed")
+            log(self.ID, "Warning: Employee already exists but options parameters were still passed")
 
         if not self.exists:
             if (
@@ -66,8 +72,9 @@ class Employee:
                 or not postal_code
                 or not F01k_deduction
                 or not rate
+                or not hours
             ):
-                print("Employee does not exist")
+                log(self.ID, "Employee does not exist")
                 self.badSetup = True
                 self.exists = False
                 return
@@ -84,12 +91,13 @@ class Employee:
             self.postal_code = postal_code
             self.F01k_deduction = F01k_deduction
             self.rate = rate
-            if type(postal_code) != int or type(F01k_deduction) != int or type(rate) != float:
-                print("Bad parameter types")
+            self.hours = hours
+            if type(postal_code) != int or type(F01k_deduction) != int or type(rate) != float or type(hours) != int:
+                log(self.ID, "Bad parameter types")
                 self.badSetup = True
                 self.exists = False
         else:
-            print("Employee found")
+            log(self.ID, "Employee found")
             self.exists = self.exists[0]
             self.first_name = self.exists[1]
             self.last_name = self.exists[2]
@@ -104,18 +112,19 @@ class Employee:
             self.postal_code = self.exists[11]
             self.F01k_deduction = self.exists[12]
             self.rate = self.exists[13]
+            self.hours = self.exists[14]
 
         DB.execute(Query.FIND(Entity.STATE, self.state))
         found = DB.result()
         if not found:
-            print("Employee State {} not found".format(self.state))
+            log(self.ID, "Employee State {} not found".format(self.state))
             self.badSetup = True
             self.exists = False
 
         DB.execute(Query.FIND(Entity.INSURNACE_PLAN, self.insurancePlan))
         found = DB.result()
         if not found:
-            print("Employee State {} not found".format(self.insurancePlan))
+            log(self.ID, "Employee State {} not found".format(self.insurancePlan))
             self.badSetup = True
             self.exists = False
 
@@ -143,7 +152,6 @@ class Employee:
 
     def addPhoneNumber(self, phoneNum: int):
         self.PhoneNumbers.add(str(phoneNum))
-        print("Phonenumbers", self.PhoneNumbers)
 
     def addBenefit(self, benefit: DataType.BenefitSelection):
         self.Benefits.add(str(benefit.value))
@@ -175,12 +183,12 @@ class Employee:
     def removeAllBenefits(self):
         self.Benefits.clear()
 
-    def create(self):
+    def create(self): # TODO: use prepared statements instead
         if self.badSetup:
-            print("Employee is invalid")
+            log(self.ID, "Employee is invalid")
             return
         if self.exists:
-            print("Employee already created, did you mean to update?")
+            log(self.ID, "Employee already created, did you mean to update?")
             return
         DB.execute(
             Query.CREATE(
@@ -198,12 +206,13 @@ class Employee:
                 self.street_name,
                 self.postal_code,
                 self.F01k_deduction,
-                self.rate
+                self.rate,
+                self.hours
             )
         )
 
         if DB.result():
-            print("Created employee {}".format(self.e_id))
+            log(self.ID, "Created employee {}".format(self.e_id))
 
         for d in self.Dependents:
             DB.execute(Query.CREATE(Relation.HAS, self.e_id, d))
@@ -216,7 +225,7 @@ class Employee:
 
     def toString(self):
         if self.badSetup:
-            print("Employee is invalid")
+            log(self.ID, "Employee is invalid")
             return
         return "{} {} | eID:{}".format(self.first_name, self.last_name, self.e_id)
     
@@ -228,10 +237,10 @@ class Employee:
 
     def update(self):
         if self.badSetup:
-            print("Employee is invalid")
+            log(self.ID, "Employee is invalid")
             return
         if not self.exists:
-            print("Employee does not exist yet, did you mean to create?")
+            log(self.ID, "Employee does not exist yet, did you mean to create?")
             return
         _first_name = "first_name='{}'".format(self.first_name)
         _last_name = "last_name='{}'".format(self.last_name)
@@ -246,6 +255,7 @@ class Employee:
         _postal_code = "postal_code='{}'".format(self.postal_code)
         _F01k_deduction = "F01k_deduction='{}'".format(self.F01k_deduction)
         _rate = "rate='{}'".format(self.rate)
+        _hours = "hours='{}'".format(self.hours)
         DB.execute(
             Query.UPDATE_SINGLE(
                 Entity.EMPLOYEE,
@@ -263,6 +273,7 @@ class Employee:
                 _postal_code,
                 _F01k_deduction,
                 _rate,
+                _hours,
             )
         )
 

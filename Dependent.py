@@ -1,8 +1,11 @@
 from postGres import Query, Entity, Multivalue, Relation, DataType
 import postGres as DB
+from Log import log
 
 
 class Dependent:
+
+    ID = "Dependent"
 
     badSetup = False
     exists = False
@@ -27,11 +30,11 @@ class Dependent:
         self.exists = DB.result()
 
         if self.exists and first_name:
-            print("Warning: Dependent already exists but options parameters were still passed")
+            log(self.ID, "Warning: Dependent already exists but options parameters were still passed")
 
         if not self.exists:
             if not d_id or not first_name or not last_name or not ssn or not benefitSelection:
-                print("Dependent does not exist")
+                log(self.ID, "Dependent does not exist")
                 self.badSetup = True
                 self.exists = False
                 return
@@ -41,7 +44,7 @@ class Dependent:
             self.ssn = ssn
             self.benefitSelection = benefitSelection.value
         else:
-            print("Dependent found")
+            log(self.ID, "Dependent found")
             self.exists = self.exists[0]
             self.first_name = self.exists[1]
             self.last_name = self.exists[2]
@@ -53,28 +56,28 @@ class Dependent:
 
     def create(self):
         if self.badSetup:
-            print("Dependent is invalid")
+            log(self.ID, "Dependent is invalid")
             return
         if self.exists:
-            print("Dependent already created, did you mean to update?")
+            log(self.ID, "Dependent already created, did you mean to update?")
             return
         DB.execute(Query.CREATE(Entity.DEPENDENT, self.exists, self.first_name, self.last_name, self.ssn, self.benefitSelection))
 
         if DB.result():
-            print("Created Dependent {}".format(self.d_id))
+            log(self.ID, "Created Dependent {}".format(self.d_id))
 
     def toString(self):
         if self.badSetup:
-            print("Dependent is invalid")
+            log(self.ID, "Dependent is invalid")
             return
         return "{} {} | dID:{}".format(self.first_name, self.last_name, self.d_id)
 
     def update(self):
         if self.badSetup:
-            print("Dependent is invalid")
+            log(self.ID, "Dependent is invalid")
             return
         if not self.exists:
-            print("Dependent does not exist yet, did you mean to create?")
+            log(self.ID, "Dependent does not exist yet, did you mean to create?")
             return
         _first_name = "first_name='{}'".format(self.first_name)
         _last_name = "last_name='{}'".format(self.last_name)

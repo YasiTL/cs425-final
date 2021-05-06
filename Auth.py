@@ -1,8 +1,10 @@
 from postGres import Query, Entity, Multivalue, Relation, DataType
 import postGres as DB
+from Log import log
 
 currentTitle = None
 currentUser = None
+ID = "Auth"
 
 
 def signIn(first_name: str, e_id: str):
@@ -13,9 +15,9 @@ def signIn(first_name: str, e_id: str):
         currentTitle = DataType.JobTitle(DB.result()[0][0])
         currentUser = first_name
         if currentTitle:
-            print(getString())
+            log(ID, getString())
     except IndexError:
-        print("Failed to Sign In")
+        log(ID, "Failed to Sign In")
         currentTitle = None
         currentUser = None
 
@@ -23,7 +25,7 @@ def signIn(first_name: str, e_id: str):
 def signOut():
     global currentTitle, currentUser
     """ Sign out """
-    print("{} Signed out".format(currentUser))
+    log(ID, "{} Signed out".format(currentUser))
     currentTitle = None
     currentUser = None
 
