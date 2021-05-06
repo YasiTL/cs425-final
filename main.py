@@ -5,6 +5,7 @@ import Auth
 from Employee import Employee
 from Dependent import Dependent
 import GUI
+import reports
 
 
 def main():
@@ -12,6 +13,8 @@ def main():
         exit("No ip given as argument")
 
     DB.connect(sys.argv[1], "Payroll")
+
+    reports.w2Report()
 
     GUI.init()
     
