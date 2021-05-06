@@ -175,7 +175,7 @@ class Employee:
     def removeAllBenefits(self):
         self.Benefits.clear()
 
-    def create(self):
+    def create(self): # TODO: use prepared statements instead
         if self.badSetup:
             print("Employee is invalid")
             return
