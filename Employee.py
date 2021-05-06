@@ -3,7 +3,6 @@ import postGres as DB
 from Log import log
 
 
-
 class Employee:
 
     ID = "Employee"
@@ -98,21 +97,21 @@ class Employee:
                 self.exists = False
         else:
             log(self.ID, "Employee found")
-            self.exists = self.exists[0]
-            self.first_name = self.exists[1]
-            self.last_name = self.exists[2]
-            self.ssn = self.exists[3]
-            self.job_title = self.exists[4]
-            self.salary_type = self.exists[5]
-            self.insurancePlan = self.exists[6]
-            self.email = self.exists[7]
-            self.country = self.exists[8]
-            self.state = self.exists[9]
-            self.street_name = self.exists[10]
-            self.postal_code = self.exists[11]
-            self.F01k_deduction = self.exists[12]
-            self.rate = self.exists[13]
-            self.hours = self.exists[14]
+            self.exists = str(self.exists[0])
+            self.first_name = str(self.exists[1])
+            self.last_name = str(self.exists[2])
+            self.ssn = str(self.exists[3])
+            self.job_title = str(self.exists[4])
+            self.salary_type = str(self.exists[5])
+            self.insurancePlan = str(self.exists[6])
+            self.email = str(self.exists[7])
+            self.country = str(self.exists[8])
+            self.state = str(self.exists[9])
+            self.street_name = str(self.exists[10])
+            self.postal_code = str(self.exists[11])
+            self.F01k_deduction = str(self.exists[12])
+            self.rate = str(self.exists[13])
+            self.hours = str(self.exists[14])
 
         DB.execute(Query.FIND(Entity.STATE, self.state))
         found = DB.result()
@@ -183,7 +182,7 @@ class Employee:
     def removeAllBenefits(self):
         self.Benefits.clear()
 
-    def create(self): # TODO: use prepared statements instead
+    def create(self):  # TODO: use prepared statements instead
         if self.badSetup:
             log(self.ID, "Employee is invalid")
             return
@@ -207,7 +206,7 @@ class Employee:
                 self.postal_code,
                 self.F01k_deduction,
                 self.rate,
-                self.hours
+                self.hours,
             )
         )
 
@@ -228,10 +227,10 @@ class Employee:
             log(self.ID, "Employee is invalid")
             return
         return "{} {} | eID:{}".format(self.first_name, self.last_name, self.e_id)
-    
+
     def getSalaryType(self):
         return DataType.Salary(self.salary_type)
-    
+
     def getJobTitle(self):
         return DataType.JobTitle(self.job_title)
 
