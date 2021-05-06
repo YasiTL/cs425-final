@@ -13,7 +13,7 @@ def main():
     if len(sys.argv) < 2:
         exit("No ip given as argument")
 
-    Log.init()
+    # Log.init()
 
     DB.connect(sys.argv[1], "Payroll")
 
