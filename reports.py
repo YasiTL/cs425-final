@@ -46,6 +46,8 @@ def checkReport():
         #print("final pay: " + finalPay)
         testReport += "final pay: " + finalPay + "\n"
 
+        return testReport
+
 def w2Report():
     print("this is report 2")
     DB.execute(Query.SELECT(Entity.EMPLOYEE, "e_id"))
