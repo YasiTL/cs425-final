@@ -77,41 +77,43 @@ class Employee:
                 self.badSetup = True
                 self.exists = False
                 return
-            self.first_name = str(first_name)
-            self.last_name = str(last_name)
-            self.ssn = str(ssn)
+            self.first_name = first_name
+            self.last_name = last_name
+            self.ssn = ssn
             self.job_title = job_title.value
             self.salary_type = salary_type.value
-            self.insurancePlan = str(insurancePlan)
-            self.email = str(email)
-            self.country = str(country)
-            self.state = str(state)
-            self.street_name = str(street_name)
-            self.postal_code = str(postal_code)
-            self.F01k_deduction = str(F01k_deduction)
-            self.rate = str(rate)
-            self.hours = str(hours)
+            self.insurancePlan = insurancePlan
+            self.email = email
+            self.country = country
+            self.state = state
+            self.street_name = street_name
+            self.postal_code = postal_code
+            self.F01k_deduction = F01k_deduction
+            self.rate = rate
+            self.hours = hours
             if type(postal_code) != int or type(F01k_deduction) != int or type(rate) != float or type(hours) != int:
                 log(self.ID, "Bad parameter types")
                 self.badSetup = True
                 self.exists = False
         else:
             log(self.ID, "Employee found")
-            self.exists = str(self.exists[0])
-            self.first_name = str(self.exists[1])
-            self.last_name = str(self.exists[2])
-            self.ssn = str(self.exists[3])
-            self.job_title = str(self.exists[4])
-            self.salary_type = str(self.exists[5])
-            self.insurancePlan = str(self.exists[6])
-            self.email = str(self.exists[7])
-            self.country = str(self.exists[8])
-            self.state = str(self.exists[9])
-            self.street_name = str(self.exists[10])
-            self.postal_code = str(self.exists[11])
-            self.F01k_deduction = str(self.exists[12])
-            self.rate = str(self.exists[13])
-            self.hours = str(self.exists[14])
+            self.exists = self.exists[0]
+            self.first_name = self.exists[1]
+            self.last_name = self.exists[2]
+            self.ssn = self.exists[3]
+            self.job_title = self.exists[4]
+            self.salary_type = self.exists[5]
+            self.insurancePlan = self.exists[6]
+            self.email = self.exists[7]
+            self.country = self.exists[8]
+            self.state = self.exists[9]
+            self.street_name = self.exists[10]
+            self.postal_code = self.exists[11]
+            self.F01k_deduction = self.exists[12]
+            self.rate = self.exists[13]
+            self.hours = self.exists[14]
+
+        self.normalize()
 
         DB.execute(Query.FIND(Entity.STATE, self.state))
         found = DB.result()
@@ -145,6 +147,28 @@ class Employee:
         res = DB.result()
         for b in res:
             self.Benefits.add(str(b[1]))
+
+    def normalize(self):
+        try:
+            self.exists = str(self.exists)
+            self.first_name = str(self.first_name)
+            self.last_name = str(self.last_name)
+            self.ssn = str(self.ssn)
+            self.job_title = DataType.JobTitle(str(self.job_title)).value
+            self.salary_type = DataType.Salary(str(self.salary_type)).value
+            self.insurancePlan = str(self.insurancePlan)
+            self.email = str(self.email)
+            self.country = str(self.country)
+            self.state = str(self.state)
+            self.street_name = str(self.street_name)
+            self.postal_code = int(self.postal_code)
+            self.F01k_deduction = int(self.F01k_deduction)
+            self.rate = float(self.rate)
+            self.hours = int(self.hours)
+        except:
+            log(self.ID, "Failed to normalize Employee values")
+            self.exists = False
+            self.badSetup = True
 
     def addDependent(self, d_id: str):
         self.Dependents.add(d_id)
@@ -183,6 +207,7 @@ class Employee:
         self.Benefits.clear()
 
     def create(self):  # TODO: use prepared statements instead
+        self.normalize()
         if self.badSetup:
             log(self.ID, "Employee is invalid")
             return
@@ -235,6 +260,7 @@ class Employee:
         return DataType.JobTitle(self.job_title)
 
     def update(self):
+        self.normalize()
         if self.badSetup:
             log(self.ID, "Employee is invalid")
             return
