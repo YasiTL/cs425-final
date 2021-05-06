@@ -13,13 +13,14 @@ def main():
     if len(sys.argv) < 2:
         exit("No ip given as argument")
 
-    DB.connect(sys.argv[1], "Payroll")
     Log.init()
 
-    print(reports.checkReport())
+    DB.connect(sys.argv[1], "Payroll")
 
-    # GUI.init()
-    
+    # print(reports.checkReport())
+
+    GUI.init()
+
     # d0 = Dependent("someDep")
     # d0.first_name = "whahahah"
     # d0.update()
