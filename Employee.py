@@ -219,6 +219,12 @@ class Employee:
             print("Employee is invalid")
             return
         return "{} {} | eID:{}".format(self.first_name, self.last_name, self.e_id)
+    
+    def getSalaryType(self):
+        return DataType.Salary(self.salary_type)
+    
+    def getJobTitle(self):
+        return DataType.JobTitle(self.job_title)
 
     def update(self):
         if self.badSetup:
