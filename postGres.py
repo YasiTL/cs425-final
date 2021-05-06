@@ -159,41 +159,47 @@ logFile = None
 winCommand = 'start cmd /k powershell Get-Content postgres.log -Wait'
 unixCommand = 'tail -f postgres.log'
 
+def _log(string: str):
+    if logFile != None:
+        logFile.write("[Postgres] {}\n".format(string))
+        logFile.flush()
+    else: 
+        print(str)
+
 def connect(ip: str, schema: str):
     global conn, cur, logFile
     if not conn:
-        print("Connecting to postgres@{}".format(ip))
+        _log("Connecting to postgres@{}".format(ip))
         conn = psycopg.connect(host=ip, database="postgres", user="postgres", password="postgresisthepassword")
         conn.set_session(autocommit=True)
         cur = conn.cursor()
         cur.execute("set schema '{}'".format(schema))
-        logFile = open("postgres.log", 'w', 20)
         if os.name == 'nt':
+            logFile = open("postgres.log", 'w', 20)
             subprocess.run(winCommand, shell=True)
     else:
-        print("Already connected")
+        _log("Already connected")
 
 
 def execute(sql: str):
     global conn, cur, logFile
     """Execute an SQL statement"""
     if not conn:
-        print("Not connected!")
+        _log("Not connected!")
         return
+    _log("SQL: {}".format(sql))
     
-    logFile.write("SQL: {}\n".format(sql))
-    logFile.flush()
     try:
         cur.execute(sql)
     except Exception as e:
-        print(e)
+        _log(e)
 
 
 def result():
     global conn, cur
     """Returns whatever result an execution returns, if any"""
     if not conn:
-        print("Not connected!")
+        _log("Not connected!")
         return
     try:
         return cur.fetchall()
@@ -204,7 +210,7 @@ def result():
 def close():
     global conn, cur
     if not conn:
-        print("Not connected!")
+        _log("Not connected!")
         return
     cur.close()
     conn.close()
