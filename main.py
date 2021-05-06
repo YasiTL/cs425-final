@@ -16,7 +16,7 @@ def main():
     DB.connect(sys.argv[1], "Payroll")
     Log.init()
 
-    reports.w2Report()
+    print(reports.checkReport())
 
     # GUI.init()
     
