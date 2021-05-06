@@ -51,10 +51,25 @@ class Dependent:
             self.ssn = self.exists[3]
             self.benefitSelection = self.exists[4]
 
+        self.normalize()
+
         if self.badSetup:
             return
 
+    def normalize(self):
+        try:
+            self.d_id = str(self.d_id)
+            self.first_name = str(self.first_name)
+            self.last_name = str(self.last_name)
+            self.ssn = str(self.ssn)
+            self.benefitSelection = str(self.benefitSelection)
+        except:
+            log(self.ID, "Failed to normalize Employee values")
+            self.exists = False
+            self.badSetup = True
+
     def create(self):
+        self.normalize()
         if self.badSetup:
             log(self.ID, "Dependent is invalid")
             return
@@ -73,6 +88,7 @@ class Dependent:
         return "{} {} | dID:{}".format(self.first_name, self.last_name, self.d_id)
 
     def update(self):
+        self.normalize()
         if self.badSetup:
             log(self.ID, "Dependent is invalid")
             return
