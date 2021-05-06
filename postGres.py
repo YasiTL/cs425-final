@@ -167,7 +167,7 @@ def connect(ip: str, schema: str):
         conn.set_session(autocommit=True)
         cur = conn.cursor()
         cur.execute("set schema '{}'".format(schema))
-        logFile = open("postgres.log", 'a', 20)
+        logFile = open("postgres.log", 'w', 20)
         if os.name == 'nt':
             subprocess.run(winCommand, shell=True)
     else:
