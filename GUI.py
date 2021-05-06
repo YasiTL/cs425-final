@@ -73,11 +73,26 @@ class Menu(tk.Frame):
         self.topLabel.grid()
 
         # Menu Options
-        tk.Button(self.frame, text="Company Spending Report", command=self.goToReport3Page).grid()
+        self.comapnySpendingReportButton = tk.Button(self.frame, text="Company Spending Report", command=self.goToReport3Page)
         self.report3Page = Report_3(master=self.master, app=self.app)
 
-        tk.Button(self.frame, text="Manage Users", command=self.manageUsersPage).grid()
+        self.manageAllUsersButton = tk.Button(self.frame, text="Manage Users", command=self.manageUsersPage)
         self.manageUsersPage = ManageUsers(master=self.master, app=self.app)
+
+        self.manageMyselfButton = tk.Button(self.frame, text="Edit My Profile", command=self.manageUsersPage)
+        # UNKNOWN WHAT PAGE THIS WILL LINK TO.
+
+    def start(self):
+        # On start display of Menu, do the following:
+        self.topLabel.configure(text="Menu\n{}".format(Auth.getString()))
+
+        if (Auth.getTitle() == DataType.JobTitle.ADMIN):
+            self.comapnySpendingReportButton.grid()
+            self.manageAllUsersButton.grid()
+        elif (Auth.getTitle() == DataType.JobTitle.MANAGER):
+            self.manageAllUsersButton.grid()
+        else:
+            self.manageMyselfButton.grid()
 
         def signOut():
             Auth.signOut()
@@ -85,8 +100,6 @@ class Menu(tk.Frame):
 
         tk.Button(self.frame, text="Sign Out", command=signOut).grid()
 
-    def start(self):
-        self.topLabel.configure(text="Menu\n{}".format(Auth.getString()))
         self.frame.grid(row=1, column=1)
 
     def manageUsersPage(self):
