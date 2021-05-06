@@ -78,20 +78,20 @@ class Employee:
                 self.badSetup = True
                 self.exists = False
                 return
-            self.first_name = first_name
-            self.last_name = last_name
-            self.ssn = ssn
+            self.first_name = str(first_name)
+            self.last_name = str(last_name)
+            self.ssn = str(ssn)
             self.job_title = job_title.value
             self.salary_type = salary_type.value
-            self.insurancePlan = insurancePlan
-            self.email = email
-            self.country = country
-            self.state = state
-            self.street_name = street_name
-            self.postal_code = postal_code
-            self.F01k_deduction = F01k_deduction
-            self.rate = rate
-            self.hours = hours
+            self.insurancePlan = str(insurancePlan)
+            self.email = str(email)
+            self.country = str(country)
+            self.state = str(state)
+            self.street_name = str(street_name)
+            self.postal_code = str(postal_code)
+            self.F01k_deduction = str(F01k_deduction)
+            self.rate = str(rate)
+            self.hours = str(hours)
             if type(postal_code) != int or type(F01k_deduction) != int or type(rate) != float or type(hours) != int:
                 log(self.ID, "Bad parameter types")
                 self.badSetup = True
