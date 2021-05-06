@@ -13,18 +13,22 @@ def checkReport():
         print("SSN: " + e.ssn)
         biweeklyRate = e.rate/26
         print("Rate with no deductions" + biweeklyRate) # with no dedutions
+
         #deductions 
         #medicare
         medicarePay= biweeklyRate * 0.025
         print("medicare: " + medicarePay)
+
         #SS
         #depends on hourly or salery 
-        if e.salary_type = HOURLY:
+        if e.salary_type == HOURLY:
             ssPay = biweeklyRate * 0.15
             print("SS: " + ssPay)
         else:  
             ssPay = biweeklyRate * 0.075
             print("SS: " + ssPay)
+            #company pays other 0.075 in their expense report
+
         #401k deduction
         #company matched up to 7%
         print("401k: "+ e.F01k_deduction) 
