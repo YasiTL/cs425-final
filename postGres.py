@@ -156,7 +156,7 @@ def connect(ip: str, schema: str):
     global conn, cur
     if not conn:
         print("Connecting to postgres@{}".format(ip))
-        conn = psycopg.connect(host=ip, database="postgres", user="postgres", password="postgres")
+        conn = psycopg.connect(host=ip, database="postgres", user="postgres", password="postgresisthepassword")
         conn.set_session(autocommit=True)
         cur = conn.cursor()
         cur.execute("set schema '{}'".format(schema))
