@@ -13,7 +13,7 @@ def main():
 
     DB.connect(sys.argv[1], "Payroll")
 
-    # GUI.init()
+    GUI.init()
     
     # d0 = Dependent("someDep")
     # d0.first_name = "whahahah"
@@ -25,11 +25,6 @@ def main():
 
     # if clearance == DataType.JobTitle.ADMIN:
     #     print("is Admin")
-
-    DB.execute(Query.SELECT(Entity.EMPLOYEE, "e_id"))
-    for ID in DB.result():
-        e = Employee(ID[0])
-        print(e.first_name, e.last_name, e.ssn)
 
     # e2 = Employee(111111)
     # e2.ssn = "4563786"
