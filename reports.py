@@ -21,7 +21,7 @@ def checkReport():
 
         #SS
         #depends on hourly or salery 
-        if e.salary_type == HOURLY:
+        if e.salary_type == DataType.Salary.HOURLY.value:
             ssPay = biweeklyRate * 0.15
             print("SS: " + ssPay)
         else:  
