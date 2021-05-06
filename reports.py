@@ -39,11 +39,6 @@ def checkReport():
         finalPay = biweeklyRate - medicarePay - ssPay - e.F01k_deduction
         print("final pay: " + finalPay)
 
-    if len(sys.argv) < 2:
-        exit("No ip given as argument")
-
-DB.connect(sys.argv[1], "Payroll")
-
 def w2Report():
     print("this is report 2")
     DB.execute(Query.SELECT(Entity.EMPLOYEE, "e_id"))
