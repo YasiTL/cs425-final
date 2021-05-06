@@ -3,6 +3,7 @@ import base64
 from enum import Enum
 import subprocess
 import os
+from Log import log
 
 
 class Entity(Enum):
@@ -156,50 +157,42 @@ cur = None
 
 logFile = None
 
-winCommand = 'start cmd /k powershell Get-Content postgres.log -Wait'
-unixCommand = 'tail -f postgres.log'
+winCommand = "start cmd /k powershell Get-Content postgres.log -Wait"
+unixCommand = "tail -f postgres.log"
+ID = "postgres"
 
-def _log(string: str):
-    if logFile != None:
-        logFile.write("[Postgres] {}\n".format(string))
-        logFile.flush()
-    else: 
-        print(str)
 
 def connect(ip: str, schema: str):
     global conn, cur, logFile
     if not conn:
-        _log("Connecting to postgres@{}".format(ip))
+        log(ID, "Connecting to postgres@{}".format(ip))
         conn = psycopg.connect(host=ip, database="postgres", user="postgres", password="postgresisthepassword")
         conn.set_session(autocommit=True)
         cur = conn.cursor()
         cur.execute("set schema '{}'".format(schema))
-        if os.name == 'nt':
-            logFile = open("postgres.log", 'w', 20)
-            subprocess.run(winCommand, shell=True)
     else:
-        _log("Already connected")
+        log(ID, "Already connected")
 
 
 def execute(sql: str):
     global conn, cur, logFile
     """Execute an SQL statement"""
     if not conn:
-        _log("Not connected!")
+        log(ID, "Not connected!")
         return
-    _log("SQL: {}".format(sql))
-    
+    log(ID, "SQL: {}".format(sql))
+
     try:
         cur.execute(sql)
     except Exception as e:
-        _log(e)
+        log(ID, e)
 
 
 def result():
     global conn, cur
     """Returns whatever result an execution returns, if any"""
     if not conn:
-        _log("Not connected!")
+        log(ID, "Not connected!")
         return
     try:
         return cur.fetchall()
@@ -210,7 +203,7 @@ def result():
 def close():
     global conn, cur
     if not conn:
-        _log("Not connected!")
+        log(ID, "Not connected!")
         return
     cur.close()
     conn.close()
