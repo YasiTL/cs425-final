@@ -79,19 +79,22 @@ class Menu(tk.Frame):
         self.manageAllUsersButton = tk.Button(self.frame, text="Manage Users", command=self.manageUsersPage)
         self.manageUsersPage = ManageUsers(master=self.master, app=self.app)
 
-        self.manageMyselfButton = tk.Button(self.frame, text="Edit My Profile", command=self.manageUsersPage)
-        # UNKNOWN WHAT PAGE THIS WILL LINK TO.
-
     def start(self):
         # On start display of Menu, do the following:
         self.topLabel.configure(text="Menu\n{}".format(Auth.getString()))
 
+        self.manageMyselfButton = tk.Button(self.frame, text="Edit My Profile", command=self.manageMyselfPage)
+        self.manageMyselfPage = ManageMyselfPage(master=self.master, app=self.app)
+
         if (Auth.getTitle() == DataType.JobTitle.ADMIN):
             self.comapnySpendingReportButton.grid()
             self.manageAllUsersButton.grid()
+            self.manageMyselfButton.grid()
         elif (Auth.getTitle() == DataType.JobTitle.MANAGER):
             self.manageAllUsersButton.grid()
+            self.manageMyselfButton.grid()
         else:
+            pass
             self.manageMyselfButton.grid()
 
         def signOut():
@@ -105,6 +108,10 @@ class Menu(tk.Frame):
     def manageUsersPage(self):
         self.frame.grid_forget()
         self.manageUsersPage.start()
+
+    def manageMyselfPage(self):
+        self.frame.grid_forget()
+        self.manageMyselfPage.start()
 
     def goToReport1Page(self):
         self.frame.grid_forget()
@@ -629,6 +636,177 @@ class EditUserPage(tk.Frame):
         # enterCallback = None
         self.frame.grid_forget()
         UserPage(master=self.master, app=self.app).start()
+
+class ManageMyselfPage(tk.Frame):
+    def __init__(self, master=None, app=None):
+        global currentEmployee
+        currentEmployee = Auth.getCurrentEmployee()
+        self.master = master
+        self.app = app
+        self.frame = tk.Frame(self.master)
+
+        self.master = master
+        self.app = app
+        self.frame = tk.Frame(self.master)
+
+        self.topLabel = tk.Label(self.frame, text="Edit User Page")
+        self.topLabel.grid(row=0, column=1)
+
+        titles = list()
+        payTypes = list()
+        insurances = list()
+        states = list()
+
+        for t in list(DataType.JobTitle):
+            titles.append(t.value)
+
+        for s in list(DataType.Salary):
+            payTypes.append(s.value)
+
+        DB.execute(DB.Query.SELECT(DB.Entity.INSURNACE_PLAN, "*"))
+        for i in DB.result():
+            insurances.append(i[0])
+
+        DB.execute(DB.Query.SELECT(DB.Entity.STATE, "*"))
+        for s in DB.result():
+            states.append(s[0])
+
+        self.title = tk.StringVar(self.frame)
+        self.title.set(currentEmployee.job_title)
+
+        self.payType = tk.StringVar(self.frame)
+        self.payType.set(currentEmployee.salary_type)
+
+        self.insurance = tk.StringVar(self.frame)
+        self.insurance.set(currentEmployee.insurancePlan)
+
+        self.state = tk.StringVar(self.frame)
+        self.state.set(currentEmployee.state)
+
+        tk.Label(self.frame, text="eID").grid(row=1, column=0)
+        self.e_id = tk.Entry(self.frame)
+        self.e_id.insert(0, currentEmployee.e_id)
+        self.e_id.grid(row=1, column=1)
+        self.e_id.configure(state='disable')
+
+        tk.Label(self.frame, text="First name").grid(row=2, column=0)
+        self.first_name = tk.Entry(self.frame)
+        self.first_name.insert(0, currentEmployee.first_name)
+        self.first_name.grid(row=2, column=1)
+
+        tk.Label(self.frame, text="Last name").grid(row=3, column=0)
+        self.last_name = tk.Entry(self.frame)
+        self.last_name.insert(0, currentEmployee.last_name)
+        self.last_name.grid(row=3, column=1)
+
+        tk.Label(self.frame, text="ssn").grid(row=4, column=0)
+        self.ssn = tk.Entry(self.frame)
+        self.ssn.insert(0, currentEmployee.ssn)
+        self.ssn.grid(row=4, column=1)
+
+        tk.Label(self.frame, text="Job title").grid(row=5, column=0)
+        jobTitleOptionMenu = tk.OptionMenu(self.frame, self.title, *titles)
+        jobTitleOptionMenu.grid(row=5, column=1)
+        if (currentEmployee.job_title != "ADMIN"):
+            jobTitleOptionMenu.configure(state='disable')
+
+        tk.Label(self.frame, text="Salary type").grid(row=6, column=0)
+        salaryOptionMenu = tk.OptionMenu(self.frame, self.payType, *payTypes)
+        salaryOptionMenu.grid(row=6, column=1)
+        if (currentEmployee.job_title != "ADMIN"):
+            salaryOptionMenu.configure(state='disable')
+
+
+        tk.Label(self.frame, text="Insurance plan").grid(row=7, column=0)
+        tk.OptionMenu(self.frame, self.insurance, *insurances).grid(row=7, column=1)
+
+        tk.Label(self.frame, text="Email").grid(row=8, column=0)
+        self.email = tk.Entry(self.frame)
+        self.email.insert(0, currentEmployee.email)
+        self.email.grid(row=8, column=1)
+
+        tk.Label(self.frame, text="Country").grid(row=9, column=0)
+        self.country = tk.Entry(self.frame)
+        self.country.insert(0, currentEmployee.country)
+        self.country.grid(row=9, column=1)
+
+        tk.Label(self.frame, text="State").grid(row=10, column=0)
+        tk.OptionMenu(self.frame, self.state, *states).grid(row=10, column=1)
+
+        tk.Label(self.frame, text="Street Name").grid(row=11, column=0)
+        self.street_name = tk.Entry(self.frame)
+        self.street_name.insert(0, currentEmployee.street_name)
+        self.street_name.grid(row=11, column=1)
+
+        tk.Label(self.frame, text="Postal Code").grid(row=12, column=0)
+        self.postal_code = tk.Entry(self.frame)
+        self.postal_code.insert(0, currentEmployee.postal_code)
+        self.postal_code.grid(row=12, column=1)
+
+        tk.Label(self.frame, text="401k Deduction").grid(row=13, column=0)
+        self.F01k_deduction = tk.Entry(self.frame)
+        self.F01k_deduction.insert(0, currentEmployee.F01k_deduction)
+        self.F01k_deduction.grid(row=13, column=1)
+
+        tk.Label(self.frame, text="Rate").grid(row=14, column=0) # TODO: change label based on hourly or salaried
+        self.rate = tk.Entry(self.frame)
+        self.rate.insert(0, currentEmployee.rate)
+        self.rate.grid(row=14, column=1)
+        if (currentEmployee.job_title != "ADMIN"):
+            self.rate.configure(state='disable')
+        
+        tk.Label(self.frame, text="Hours").grid(row=15, column=0) # TODO: change label based on hourly or salaried
+        self.hours = tk.Entry(self.frame)
+        self.hours.insert(0, currentEmployee.hours)
+        self.hours.grid(row=15, column=1)
+
+        self.DependentsTreeview = ListboxEditable(self.frame, list(currentEmployee.Dependents), 17, 0)
+        self.PhoneNumbersTreeview = ListboxEditable(self.frame, list(currentEmployee.PhoneNumbers), 17, 1)
+        self.BenefitsTreeview = ListboxEditable(self.frame, list(currentEmployee.Benefits), 17, 2)
+
+        tk.Button(self.frame, text="Add Dependent", command=self.DependentsTreeview.addPlaceRow).grid(row=16, column=0)
+        tk.Button(self.frame, text="Add Number", command=self.PhoneNumbersTreeview.addPlaceRow).grid(row=16, column=1)
+        tk.Button(self.frame, text="Add Benefit", command=self.BenefitsTreeview.addPlaceRow).grid(row=16, column=2)
+
+        self.DependentsTreeview.placeListBoxEditable()
+        self.PhoneNumbersTreeview.placeListBoxEditable()
+        self.BenefitsTreeview.placeListBoxEditable()
+
+        tk.Button(self.frame, text="Update", command=self.update).grid(sticky="s")
+        tk.Button(self.frame, text="Back", command=self.go_back).grid(sticky="s")
+
+    def update(self):
+        global currentEmployee
+        currentEmployee.first_name = self.first_name.get()
+        currentEmployee.last_name = self.last_name.get()
+        currentEmployee.ssn = self.ssn.get()
+        currentEmployee.job_title = self.title.get()
+        currentEmployee.salary_type = self.payType.get()
+        currentEmployee.insurancePlan = self.insurance.get()
+        currentEmployee.email = self.email.get()
+        currentEmployee.country = self.country.get()
+        currentEmployee.state = self.state.get()
+        currentEmployee.street_name = self.street_name.get()
+        currentEmployee.postal_code = self.postal_code.get()
+        currentEmployee.F01k_deduction = self.F01k_deduction.get()
+        currentEmployee.rate = self.rate.get()
+        currentEmployee.hours = self.hours.get()
+        currentEmployee.Dependents = set(self.DependentsTreeview.getList())
+        currentEmployee.PhoneNumbers = set(self.PhoneNumbersTreeview.getList())
+        currentEmployee.Benefits = set(self.BenefitsTreeview.getList())
+        currentEmployee.update()
+
+    def start(self):
+        # global enterCallback
+        # enterCallback = self.update
+        self.topLabel.configure(text="Edit User : {}".format(currentEmployee.toString()))
+        self.frame.grid(row=1, column=1)
+
+    def go_back(self):
+        # global enterCallback
+        # enterCallback = None
+        self.frame.grid_forget()
+        Menu(master=self.master, app=self.app).start()
 
 
 # Employee Bi weekly paycheck
