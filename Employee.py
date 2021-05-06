@@ -152,7 +152,6 @@ class Employee:
 
     def addPhoneNumber(self, phoneNum: int):
         self.PhoneNumbers.add(str(phoneNum))
-        log(self.ID, "Phonenumbers", self.PhoneNumbers)
 
     def addBenefit(self, benefit: DataType.BenefitSelection):
         self.Benefits.add(str(benefit.value))
