@@ -306,13 +306,17 @@ class AddUserPage(tk.Frame):
         self.rate = tk.Entry(self.frame)
         self.rate.grid(row=14, column=1)
 
-        self.DependentsTreeview = ListboxEditable(self.frame, list(), 16, 0)
-        self.PhoneNumbersTreeview = ListboxEditable(self.frame, list(), 16, 1)
-        self.BenefitsTreeview = ListboxEditable(self.frame, list(), 16, 2)
+        tk.Label(self.frame, text="Hours").grid(row=15, column=0) # TODO: change label based on hourly or salaried
+        self.hours = tk.Entry(self.frame)
+        self.hours.grid(row=15, column=1)
 
-        tk.Button(self.frame, text="Add Dependent", command=self.DependentsTreeview.addPlaceRow).grid(row=15, column=0)
-        tk.Button(self.frame, text="Add Number", command=self.PhoneNumbersTreeview.addPlaceRow).grid(row=15, column=1)
-        tk.Button(self.frame, text="Add Benefit", command=self.BenefitsTreeview.addPlaceRow).grid(row=15, column=2)
+        self.DependentsTreeview = ListboxEditable(self.frame, list(), 17, 0)
+        self.PhoneNumbersTreeview = ListboxEditable(self.frame, list(), 17, 1)
+        self.BenefitsTreeview = ListboxEditable(self.frame, list(), 17, 2)
+
+        tk.Button(self.frame, text="Add Dependent", command=self.DependentsTreeview.addPlaceRow).grid(row=16, column=0)
+        tk.Button(self.frame, text="Add Number", command=self.PhoneNumbersTreeview.addPlaceRow).grid(row=16, column=1)
+        tk.Button(self.frame, text="Add Benefit", command=self.BenefitsTreeview.addPlaceRow).grid(row=16, column=2)
 
         self.DependentsTreeview.placeListBoxEditable()
         self.PhoneNumbersTreeview.placeListBoxEditable()
@@ -334,6 +338,7 @@ class AddUserPage(tk.Frame):
                 int(self.postal_code.get()),
                 int(self.F01k_deduction.get()),
                 float(self.rate.get()),
+                int(self.hours.get()),
             )
             newBoi.Dependents = set(self.DependentsTreeview.getList())
             newBoi.PhoneNumbers = set(self.PhoneNumbersTreeview.getList())
@@ -558,14 +563,19 @@ class EditUserPage(tk.Frame):
         self.rate = tk.Entry(self.frame)
         self.rate.insert(0, currentEmployee.rate)
         self.rate.grid(row=14, column=1)
+        
+        tk.Label(self.frame, text="Hours").grid(row=15, column=0) # TODO: change label based on hourly or salaried
+        self.hours = tk.Entry(self.frame)
+        self.hours.insert(0, currentEmployee.hours)
+        self.hours.grid(row=15, column=1)
 
-        self.DependentsTreeview = ListboxEditable(self.frame, list(currentEmployee.Dependents), 16, 0)
-        self.PhoneNumbersTreeview = ListboxEditable(self.frame, list(currentEmployee.PhoneNumbers), 16, 1)
-        self.BenefitsTreeview = ListboxEditable(self.frame, list(currentEmployee.Benefits), 16, 2)
+        self.DependentsTreeview = ListboxEditable(self.frame, list(currentEmployee.Dependents), 17, 0)
+        self.PhoneNumbersTreeview = ListboxEditable(self.frame, list(currentEmployee.PhoneNumbers), 17, 1)
+        self.BenefitsTreeview = ListboxEditable(self.frame, list(currentEmployee.Benefits), 17, 2)
 
-        tk.Button(self.frame, text="Add Dependent", command=self.DependentsTreeview.addPlaceRow).grid(row=15, column=0)
-        tk.Button(self.frame, text="Add Number", command=self.PhoneNumbersTreeview.addPlaceRow).grid(row=15, column=1)
-        tk.Button(self.frame, text="Add Benefit", command=self.BenefitsTreeview.addPlaceRow).grid(row=15, column=2)
+        tk.Button(self.frame, text="Add Dependent", command=self.DependentsTreeview.addPlaceRow).grid(row=16, column=0)
+        tk.Button(self.frame, text="Add Number", command=self.PhoneNumbersTreeview.addPlaceRow).grid(row=16, column=1)
+        tk.Button(self.frame, text="Add Benefit", command=self.BenefitsTreeview.addPlaceRow).grid(row=16, column=2)
 
         self.DependentsTreeview.placeListBoxEditable()
         self.PhoneNumbersTreeview.placeListBoxEditable()
@@ -589,6 +599,7 @@ class EditUserPage(tk.Frame):
         currentEmployee.postal_code = self.postal_code.get()
         currentEmployee.F01k_deduction = self.F01k_deduction.get()
         currentEmployee.rate = self.rate.get()
+        currentEmployee.hours = self.hours.get()
         currentEmployee.Dependents = set(self.DependentsTreeview.getList())
         currentEmployee.PhoneNumbers = set(self.PhoneNumbersTreeview.getList())
         currentEmployee.Benefits = set(self.BenefitsTreeview.getList())

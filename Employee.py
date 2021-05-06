@@ -25,6 +25,7 @@ class Employee:
     postal_code = None
     F01k_deduction = None
     rate = None
+    hours = None
 
     Dependents = set()
     PhoneNumbers = set()
@@ -46,6 +47,7 @@ class Employee:
         postal_code: int = None,
         F01k_deduction: int = None,
         rate: float = None,
+        hours: int = None,
     ):
         """ Initialize a new Employee to be created or updated"""
         self.e_id = e_id
@@ -70,6 +72,7 @@ class Employee:
                 or not postal_code
                 or not F01k_deduction
                 or not rate
+                or not hours
             ):
                 log(self.ID, "Employee does not exist")
                 self.badSetup = True
@@ -88,7 +91,8 @@ class Employee:
             self.postal_code = postal_code
             self.F01k_deduction = F01k_deduction
             self.rate = rate
-            if type(postal_code) != int or type(F01k_deduction) != int or type(rate) != float:
+            self.hours = hours
+            if type(postal_code) != int or type(F01k_deduction) != int or type(rate) != float or type(hours) != int:
                 log(self.ID, "Bad parameter types")
                 self.badSetup = True
                 self.exists = False
@@ -108,6 +112,7 @@ class Employee:
             self.postal_code = self.exists[11]
             self.F01k_deduction = self.exists[12]
             self.rate = self.exists[13]
+            self.hours = self.exists[14]
 
         DB.execute(Query.FIND(Entity.STATE, self.state))
         found = DB.result()
@@ -202,7 +207,8 @@ class Employee:
                 self.street_name,
                 self.postal_code,
                 self.F01k_deduction,
-                self.rate
+                self.rate,
+                self.hours
             )
         )
 
@@ -250,6 +256,7 @@ class Employee:
         _postal_code = "postal_code='{}'".format(self.postal_code)
         _F01k_deduction = "F01k_deduction='{}'".format(self.F01k_deduction)
         _rate = "rate='{}'".format(self.rate)
+        _hours = "hours='{}'".format(self.hours)
         DB.execute(
             Query.UPDATE_SINGLE(
                 Entity.EMPLOYEE,
@@ -267,6 +274,7 @@ class Employee:
                 _postal_code,
                 _F01k_deduction,
                 _rate,
+                _hours,
             )
         )
 
