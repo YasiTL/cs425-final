@@ -10,11 +10,16 @@ def checkReport():
     DB.execute(Query.SELECT(Entity.EMPLOYEE, "e_id"))
     for ID in DB.result():
         e = Employee(ID[0])
-        print(e.first_name, e.last_name, e.ssn)
+        print("SSN: " + e.ssn)
+        biweeklyRate = e.rate/26
+        print("Rate with no deductions" + biweeklyRate) # with no dedutions
+        #deductions 
+        #medicare
+        medicarePay= biweeklyRate * 0.025
+        print("medicare: " + medicarePay)
 
-
-if len(sys.argv) < 2:
-    exit("No ip given as argument")
+    if len(sys.argv) < 2:
+        exit("No ip given as argument")
 
 DB.connect(sys.argv[1], "Payroll")
 
