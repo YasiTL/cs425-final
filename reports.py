@@ -17,6 +17,23 @@ def checkReport():
         #medicare
         medicarePay= biweeklyRate * 0.025
         print("medicare: " + medicarePay)
+        #SS
+        #depends on hourly or salery 
+        if e.salary_type = HOURLY:
+            ssPay = biweeklyRate * 0.15
+            print("SS: " + ssPay)
+        else:  
+            ssPay = biweeklyRate * 0.075
+            print("SS: " + ssPay)
+        #401k deduction
+        #company matched up to 7%
+        print("401k: "+ e.F01k_deduction) 
+
+        #add tax braccket stuff 
+        #here 
+
+        finalPay = biweeklyRate - medicarePay - ssPay - e.F01k_deduction
+        print("final pay: " + finalPay)
 
     if len(sys.argv) < 2:
         exit("No ip given as argument")
