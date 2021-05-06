@@ -1,6 +1,8 @@
 import psycopg2 as psycopg  # pip install psycopg2-binary
 import base64
 from enum import Enum
+import subprocess
+import os
 
 
 class Entity(Enum):
@@ -152,26 +154,35 @@ class Query:
 conn = None
 cur = None
 
+logFile = None
+
+winCommand = 'start cmd /k powershell Get-Content postgres.log -Wait'
+unixCommand = 'tail -f postgres.log'
 
 def connect(ip: str, schema: str):
-    global conn, cur
+    global conn, cur, logFile
     if not conn:
         print("Connecting to postgres@{}".format(ip))
         conn = psycopg.connect(host=ip, database="postgres", user="postgres", password="postgresisthepassword")
         conn.set_session(autocommit=True)
         cur = conn.cursor()
         cur.execute("set schema '{}'".format(schema))
+        logFile = open("postgres.log", 'a', 20)
+        if os.name == 'nt':
+            subprocess.run(winCommand, shell=True)
     else:
         print("Already connected")
 
 
 def execute(sql: str):
-    global conn, cur
+    global conn, cur, logFile
     """Execute an SQL statement"""
     if not conn:
         print("Not connected!")
         return
-    print("SQL: ", sql)
+    
+    logFile.write("SQL: {}\n".format(sql))
+    logFile.flush()
     try:
         cur.execute(sql)
     except Exception as e:
