@@ -35,6 +35,7 @@ class Entity(Enum):
             "street_name",
             "postal_code",
             "F01k_deduction",
+            "rate",
         ),
     )
 

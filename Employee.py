@@ -20,6 +20,7 @@ class Employee:
     street_name = None
     postal_code = None
     F01k_deduction = None
+    rate = None
 
     Dependents = set()
     PhoneNumbers = set()
@@ -40,6 +41,7 @@ class Employee:
         street_name: str = None,
         postal_code: int = None,
         F01k_deduction: int = None,
+        rate: float = None,
     ):
         """ Initialize a new Employee to be created or updated"""
         self.e_id = e_id
@@ -63,6 +65,7 @@ class Employee:
                 or not street_name
                 or not postal_code
                 or not F01k_deduction
+                or not rate
             ):
                 print("Employee does not exist")
                 self.badSetup = True
@@ -80,7 +83,8 @@ class Employee:
             self.street_name = street_name
             self.postal_code = postal_code
             self.F01k_deduction = F01k_deduction
-            if type(postal_code) != int or type(F01k_deduction) != int:
+            self.rate = rate
+            if type(postal_code) != int or type(F01k_deduction) != int or type(rate) != float:
                 print("Bad parameter types")
                 self.badSetup = True
                 self.exists = False
@@ -99,6 +103,7 @@ class Employee:
             self.street_name = self.exists[10]
             self.postal_code = self.exists[11]
             self.F01k_deduction = self.exists[12]
+            self.rate = self.exists[13]
 
         DB.execute(Query.FIND(Entity.STATE, self.state))
         found = DB.result()
@@ -193,6 +198,7 @@ class Employee:
                 self.street_name,
                 self.postal_code,
                 self.F01k_deduction,
+                self.rate
             )
         )
 
@@ -233,6 +239,7 @@ class Employee:
         _street_name = "street_name='{}'".format(self.street_name)
         _postal_code = "postal_code='{}'".format(self.postal_code)
         _F01k_deduction = "F01k_deduction='{}'".format(self.F01k_deduction)
+        _rate = "rate='{}'".format(self.rate)
         DB.execute(
             Query.UPDATE_SINGLE(
                 Entity.EMPLOYEE,
@@ -249,6 +256,7 @@ class Employee:
                 _street_name,
                 _postal_code,
                 _F01k_deduction,
+                _rate,
             )
         )
 

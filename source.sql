@@ -46,25 +46,28 @@ create table Dependent_BenefitSelection_m(
     d_id varchar(20) primary key references Dependent_t on delete cascade,
     selection BenefitSelection_e not null
 );
-create table Employee_t(
-    e_id varchar(20) primary key,
-    first_name varchar(20),
-    last_name varchar(20),
-    ssn varchar(20),
-    job_title JobTitle_e,
-    salary_type Salary_e,
-    insurancePlan varchar(20),
-    email varchar(20) check (email like '%@%'),
-    country varchar(20),
-    state varchar(20),
-    street_name varchar(20),
-    postal_code numeric(10, 0),
-    F01k_deduction int,
-    foreign key (insurancePlan) references InsurancePlan_t,
-    foreign key (state) references State_t
+CREATE TABLE "Payroll".employee_t (
+	e_id varchar(20) NOT NULL,
+	first_name varchar(20) NULL,
+	last_name varchar(20) NULL,
+	ssn varchar(20) NULL,
+	job_title "Payroll"."jobtitle_e" NULL,
+	salary_type "Payroll"."salary_e" NULL,
+	insuranceplan varchar(20) NULL,
+	email varchar(20) NULL,
+	country varchar(20) NULL,
+	state varchar(20) NULL,
+	street_name varchar(20) NULL,
+	postal_code numeric(10) NULL,
+	f01k_deduction int4 NULL,
+	rate numeric(10,2) NULL,
+	CONSTRAINT employee_t_email_check CHECK (((email)::text ~~ '%@%'::text)),
+	CONSTRAINT employee_t_pkey PRIMARY KEY (e_id),
+	CONSTRAINT employee_t_insuranceplan_fkey FOREIGN KEY (insuranceplan) REFERENCES "Payroll".insuranceplan_t(plan_id),
+	CONSTRAINT employee_t_state_fkey FOREIGN KEY (state) REFERENCES "Payroll".state_t(state_name)
 );
-create index Employee_FullName_i on Employee_t(e_id, first_name, last_name);
-create index Employee_Address_i on Employee_t(e_id, country, state, street_name, postal_code);
+CREATE INDEX employee_address_i ON "Payroll".employee_t USING btree (e_id, country, state, street_name, postal_code);
+CREATE INDEX employee_fullname_i ON "Payroll".employee_t USING btree (e_id, first_name, last_name);
 create table Employee_Phone_m(
     e_id varchar(20) primary key references Employee_t on delete cascade,
     phone numeric(10, 0) not null
