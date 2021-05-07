@@ -259,6 +259,23 @@ class Employee:
     def getJobTitle(self):
         return DataType.JobTitle(self.job_title)
 
+    def getInsurnacePlanCost(self):
+        self.normalize()
+        if self.badSetup:
+            log(self.ID, "Employee is invalid")
+            return
+        if not self.exists:
+            log(self.ID, "Employee does not exist yet, did you mean to create?")
+            return
+        DB.execute(
+            Query.FIND(
+                Entity.INSURNACE_PLAN,
+                self.insurancePlan,
+                "employer_cost_for_individual" if len(self.Dependents) > 0 else "employer_cost_for_family",
+            )
+        )
+        return DB.result()[0][0]
+
     def getTaxRate(self):
         self.normalize()
         if self.badSetup:
