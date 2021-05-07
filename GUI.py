@@ -459,10 +459,12 @@ class AddUserPage(tk.Frame):
         tk.Button(self.frame, text="Create", command=create).grid(sticky="s")
         tk.Button(self.frame, text="Go Back", command=back).grid(sticky="s")
 
-        global enterCallback
-        enterCallback = create
+        # global enterCallback
+        # enterCallback = create
 
     def start(self):
+        global enterCallback
+        enterCallback = None
         self.frame.grid(row=1, column=1)
 
     def go_back(self):

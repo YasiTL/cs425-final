@@ -37,6 +37,7 @@ class Entity(Enum):
             "postal_code",
             "F01k_deduction",
             "rate",
+            "hours",
         ),
     )
 

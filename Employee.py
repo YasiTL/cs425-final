@@ -52,6 +52,10 @@ class Employee:
         self.e_id = e_id
         DB.execute(Query.SELECT_WHERE(Entity.EMPLOYEE, "e_id='{}'".format(e_id), "*"))
         self.exists = DB.result()
+        if self.exists != None:
+            if len(self.exists) == 0:
+                self.exists = None
+        log(self.ID, self.exists)
 
         if self.exists and first_name:
             log(self.ID, "Warning: Employee already exists but options parameters were still passed")
@@ -213,7 +217,7 @@ class Employee:
             return
         if self.exists:
             log(self.ID, "Employee already created, did you mean to update?")
-            return
+            # return
         DB.execute(
             Query.CREATE(
                 Entity.EMPLOYEE,
@@ -266,7 +270,7 @@ class Employee:
             return
         if not self.exists:
             log(self.ID, "Employee does not exist yet, did you mean to create?")
-            return
+            # return
         DB.execute(
             Query.FIND(
                 Entity.INSURNACE_PLAN,

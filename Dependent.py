@@ -28,6 +28,9 @@ class Dependent:
         self.d_id = d_id
         DB.execute(Query.SELECT_WHERE(Entity.DEPENDENT, "d_id='{}'".format(d_id), "*"))
         self.exists = DB.result()
+        if self.exists != None:
+            if len(self.exists) == 0:
+                self.exists = None
 
         if self.exists and first_name:
             log(self.ID, "Warning: Dependent already exists but options parameters were still passed")
