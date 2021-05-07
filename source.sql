@@ -27,7 +27,7 @@ create table InsurancePlan_t(
     plan_id varchar(20) primary key,
     employee_cost_for_individualPlan decimal(8, 2),
     employee_cost_for_familyPlan decimal(8, 2),
-    employer_cost_for_indivudal decimal(8, 2),
+    employer_cost_for_individual decimal(8, 2),
     employer_cost_for_family decimal(8, 2)
 );
 create table State_t(
@@ -101,7 +101,7 @@ create table has_r(
 
 --insert into State_t(state_name, tax_rate) values ('test', 45);
 --insert into State_t(state_name, tax_rate) values ('Illinois', 22.5);
---insert into insuranceplan_t(plan_id, employee_cost_for_individualPlan, employee_cost_for_familyPlan, employer_cost_for_indivudal, employer_cost_for_family)
+--insert into insuranceplan_t(plan_id, employee_cost_for_individualPlan, employee_cost_for_familyPlan, employer_cost_for_individual, employer_cost_for_family)
 --values ('basic health', 159.54, 134.87, 15678.25, 1111.11);
 -- insert into employee_t(e_id, first_name, last_name, ssn, job_title, salary_type, insurancePlan, email, country, state, street_name, postal_code, F01k_deduction)
 -- values ('TestID', 'boi', 'Smith', 4201337, 'ADMIN', 'HOURLY', 'basic health', 'TechYeah@iit.edu', 'Albania', 'Illinois', 'Main Street', 1808, 25.45);
