@@ -55,7 +55,6 @@ class Employee:
         if self.exists != None:
             if len(self.exists) == 0:
                 self.exists = None
-        log(self.ID, self.exists)
 
         if self.exists and first_name:
             log(self.ID, "Warning: Employee already exists but options parameters were still passed")
@@ -154,7 +153,6 @@ class Employee:
 
     def normalize(self):
         try:
-            self.exists = str(self.exists)
             self.first_name = str(self.first_name)
             self.last_name = str(self.last_name)
             self.ssn = str(self.ssn)
@@ -217,7 +215,7 @@ class Employee:
             return
         if self.exists:
             log(self.ID, "Employee already created, did you mean to update?")
-            # return
+            return
         DB.execute(
             Query.CREATE(
                 Entity.EMPLOYEE,
