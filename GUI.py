@@ -884,26 +884,27 @@ class ManageMyselfPage(tk.Frame):
         Menu(master=self.master, app=self.app).start()
 
 
-# Employee Bi weekly paycheck
+# Employee W2
 class Report_1(tk.Frame):
     def __init__(self, master=None, app=None):
         self.master = master
         self.app = app
         self.frame = tk.Frame(self.master)
+        self.report = tk.Label(self.frame, text="Update")
+        self.report.grid()
 
         # Components
-        tk.Label(self.frame, text="Report 1").grid()
         tk.Button(self.frame, text="Go back to Employee Dash", command=self.go_back).grid()
 
     def start(self):
         self.frame.grid(row=1, column=1)
+        self.report.configure(text=reports.w2Report())
 
     def go_back(self):
         self.frame.grid_forget()
         UserPage(master=self.master, app=self.app).start()
 
-
-# Employee W2
+# Employee Bi weekly paycheck
 class Report_2(tk.Frame):
     def __init__(self, master=None, app=None):
         self.master = master

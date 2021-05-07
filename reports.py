@@ -89,15 +89,64 @@ def checkReport():
 
 
 def w2Report():
-    # print("this is report 2")
     # 52 weeks yearly
-    w2ReportText = "here it will show"
-    DB.execute(Query.SELECT(Entity.EMPLOYEE, "e_id"))
-    for ID in DB.result():
-        e = Employee(ID[0])
-        print(e.first_name, e.ssn, e.rate)
-    return w2ReportText
+    e = Auth.getCurrentEmployee()
+    w2ReportText = ""
+    ssn = ""
+    taxDeductions = 0
+    other = 0
+    bonus = 0
+    takeHome = 0
 
+    ssn = e.ssn
+
+    sTax = round(e.rate * e.getTaxRate(),2)
+
+    if e.rate < 10000:
+        fTax = e.rate* 0.01
+    elif e.rate < 40000:
+        fTax = e.rate * 0.02
+    elif e.rate < 85000:
+        fTax = e.rate * 0.04
+    elif e.rate < 163301:
+        fTax = e.rate * 0.06
+    elif e.rate < 207351:
+        fTax = e.rate * 0.08
+    else:
+        fTax = e.rate * 0.09
+        
+    taxDeductions = round(sTax + fTax,2)
+    
+    insuranceCost = round(e.getInsurnacePlanCost() * 26,2)
+    
+    if e.salary_type == DataType.Salary.HOURLY.value:
+        yearlyIncome = e.hours * e.rate 
+        f01kTotal = round(yearlyIncome * (e.F01k_deduction / 100), 2)
+        mcPay = round(yearlyIncome * 0.025,2)
+    else:
+        yearlyIncome = e.rate
+        bonus += rnd(0, int(e.rate)) + e.rate % 1
+        f01kTotal = round(e.rate * (e.F01k_deduction / 100), 2)
+        mcPay = round(e.rate * 0.025,2)
+
+    other = insuranceCost + f01kTotal + mcPay
+
+    
+    w2ReportText += """
+---------[ W2 REPORT ]---------
+    
+    SNN: {}
+    Yearly Income : ${}
+    Tax Deductions : ${}
+    Other Deductions : ${}
+    Bonus : ${}
+    Take home: ${}
+    
+    """.format(
+        ssn, yearlyIncome, taxDeductions , other, bonus, yearlyIncome-taxDeductions-other
+    )
+
+    return w2ReportText
 
 def expenseReport():
     repo = ""
@@ -123,6 +172,7 @@ def expenseReport():
         employeeCount += 1
         premium += e.getInsurnacePlanCost() / 2
 
+    
     repo += """
 ---------[ COMPANY EXPENSE REPORT ]---------
     
