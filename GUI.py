@@ -7,6 +7,7 @@ from Dependent import Dependent
 import postGres as DB
 import Auth
 import expenseReport
+import reports
 
 currentEmployee = Employee
 enterCallback = None
@@ -909,13 +910,15 @@ class Report_2(tk.Frame):
         self.master = master
         self.app = app
         self.frame = tk.Frame(self.master)
+        self.report = tk.Label(self.frame, text="Update")
+        self.report.grid()
 
         # Components
-        tk.Label(self.frame, text="Report 2").grid()
         tk.Button(self.frame, text="Go to Employee Dash", command=self.go_back).grid()
 
     def start(self):
         self.frame.grid(row=1, column=1)
+        self.report.configure(text=reports.checkReport())
 
     def go_back(self):
         self.frame.grid_forget()
