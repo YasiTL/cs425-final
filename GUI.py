@@ -3,6 +3,7 @@ from tkinter import ttk
 from functools import partial
 from postGres import DataType
 from Employee import Employee
+from Dependent import Dependent
 import postGres as DB
 import Auth
 
@@ -79,12 +80,16 @@ class Menu(tk.Frame):
         self.manageAllUsersButton = tk.Button(self.frame, text="Manage Users", command=self.manageUsersPage)
         self.manageUsersPage = ManageUsers(master=self.master, app=self.app)
 
+        self.addDependentButton = tk.Button(self.frame, text="Add Dependent", command=self.addDependentPage)
+        self.addDependentPage = AddDependentPage(master=self.master, app=self.app)
+
     def start(self):
         # On start display of Menu, do the following:
         self.topLabel.configure(text="Menu\n{}".format(Auth.getString()))
 
         self.manageMyselfButton = tk.Button(self.frame, text="Edit My Profile", command=self.manageMyselfPage)
         self.manageMyselfPage = ManageMyselfPage(master=self.master, app=self.app)
+        self.addDependentButton.grid()
 
         if (Auth.getTitle() == DataType.JobTitle.ADMIN):
             self.comapnySpendingReportButton.grid()
@@ -112,6 +117,10 @@ class Menu(tk.Frame):
     def manageMyselfPage(self):
         self.frame.grid_forget()
         self.manageMyselfPage.start()
+    
+    def addDependentPage(self):
+        self.frame.grid_forget()
+        self.addDependentPage.start()
 
     def goToReport1Page(self):
         self.frame.grid_forget()
@@ -181,7 +190,6 @@ class ManageUsers(tk.Frame):
         else:
             tk.Label(self.frame, text="Cannot find employee").grid(row=4, column=1)
 
-
 class UserPage(tk.Frame):
     def __init__(self, master=None, app=None):
         self.master = master
@@ -234,6 +242,68 @@ class UserPage(tk.Frame):
         DB.execute(DB.Query.DELETE(DB.Entity.EMPLOYEE, "e_id='{}'".format(currentEmployee.e_id)))
         self.go_back
 
+class AddDependentPage(tk.Frame):
+    def __init__(self, master=None, app=None):
+        self.master = master
+        self.app = app
+        self.frame = tk.Frame(self.master)
+
+        tk.Label(self.frame, text="Add Dependent Page").grid(row=0, column=1)
+
+        benifits = list()
+
+        for b in list(DataType.BenefitSelection):
+            benifits.append(b.value)
+
+        benifit = tk.StringVar(self.frame)
+        benifit.set(benifits[0])
+
+        tk.Label(self.frame, text="dID").grid(row=1, column=0)
+        self.d_id = tk.Entry(self.frame)
+        self.d_id.grid(row=1, column=1)
+
+        tk.Label(self.frame, text="First name").grid(row=2, column=0)
+        self.first_name = tk.Entry(self.frame)
+        self.first_name.grid(row=2, column=1)
+
+        tk.Label(self.frame, text="Last name").grid(row=3, column=0)
+        self.last_name = tk.Entry(self.frame)
+        self.last_name.grid(row=3, column=1)
+
+        tk.Label(self.frame, text="ssn").grid(row=4, column=0)
+        self.ssn = tk.Entry(self.frame)
+        self.ssn.grid(row=4, column=1)
+
+        tk.Label(self.frame, text="Benifits").grid(row=7, column=0)
+        tk.OptionMenu(self.frame, benifit, *benifits).grid(row=7, column=1)
+
+        def create():
+            newDependent = Dependent(
+                self.d_id.get(),
+                self.first_name.get(),
+                self.last_name.get(),
+                self.ssn.get(),
+                DataType.BenefitSelection(benifit.get().upper())
+            )
+            newDependent.create()
+
+        def back():
+            self.go_back()
+
+        tk.Button(self.frame, text="Create", command=create).grid(sticky="s")
+        tk.Button(self.frame, text="Go Back", command=back).grid(sticky="s")
+
+        global enterCallback
+        enterCallback = create
+
+    def start(self):
+        self.frame.grid(row=1, column=1)
+
+    def go_back(self):
+        global enterCallback
+        enterCallback = None
+        self.frame.grid_forget()
+        ManageUsers(master=self.master, app=self.app).start()
 
 class AddUserPage(tk.Frame):
     def __init__(self, master=None, app=None):
