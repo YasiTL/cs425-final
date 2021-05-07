@@ -274,7 +274,7 @@ class Employee:
                 "employer_cost_for_family" if len(self.Dependents) > 0 else "employer_cost_for_individual",
             )
         )
-        return DB.result()[0][0]
+        return float(DB.result()[0][0])
 
     def getTaxRate(self):
         self.normalize()
@@ -285,7 +285,7 @@ class Employee:
             log(self.ID, "Employee does not exist yet, did you mean to create?")
             return
         DB.execute(Query.FIND(Entity.STATE, self.state, "tax_rate"))
-        return DB.result()[0][0]
+        return float(DB.result()[0][0])
 
     def update(self):
         self.normalize()
