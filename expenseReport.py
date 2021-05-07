@@ -14,6 +14,7 @@ def report():
     bonuses = 0
     f01k = 0
     social = 0
+    premium = 0
 
     DB.execute(Query.SELECT(Entity.EMPLOYEE, "e_id"))
     for ID in DB.result():
@@ -22,6 +23,7 @@ def report():
         employeeWages += wage
         f01k += wage * min(float(e.F01k_deduction) / 100.0, 0.07)
         employeeCount += 1
+        premium += e.getInsurnacePlanCost() / 2
         if e.salary_type == DataType.Salary.SALARY.value:
             bonuses += rnd(0, int(e.rate)) + e.rate % 1
             bonusCount += 1
@@ -34,9 +36,10 @@ def report():
     Bonuses @ {} : ${}
     401K Contributions : ${}
     Social Security Contribution @ {} : ${}
+    Insurance Premiums : ${}
     
     """.format(
-        employeeCount, employeeWages, bonusCount, bonuses, int(f01k * 100) / 100, bonusCount, social
+        employeeCount, employeeWages, bonusCount, bonuses, int(f01k * 100) / 100, bonusCount, social, premium
     )
 
     return repo
