@@ -271,7 +271,7 @@ class Employee:
             Query.FIND(
                 Entity.INSURNACE_PLAN,
                 self.insurancePlan,
-                "employer_cost_for_individual" if len(self.Dependents) > 0 else "employer_cost_for_family",
+                "employer_cost_for_family" if len(self.Dependents) > 0 else "employer_cost_for_individual",
             )
         )
         return DB.result()[0][0]
