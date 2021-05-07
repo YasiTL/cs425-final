@@ -7,6 +7,7 @@ from Dependent import Dependent
 import GUI
 import reports
 import Log
+# import expenseReport
 
 
 def main():
@@ -17,7 +18,7 @@ def main():
 
     DB.connect(sys.argv[1], "Payroll")
 
-    # print(reports.checkReport())
+    # print(expenseReport.report())
 
     GUI.init()
 
