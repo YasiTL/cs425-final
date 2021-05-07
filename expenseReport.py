@@ -40,7 +40,7 @@ def report():
     Insurance Premiums : ${}
     
     """.format(
-        employeeCount, employeeWages, bonusCount, bonuses, int(f01k * 100) / 100, bonusCount, social, premium
+        employeeCount, employeeWages, bonusCount, bonuses, round(f01k, 2), bonusCount, social, premium
     )
 
     return repo
