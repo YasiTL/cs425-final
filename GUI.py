@@ -78,8 +78,14 @@ class Menu(tk.Frame):
         self.comapnySpendingReportButton = tk.Button(self.frame, text="Company Spending Report", command=self.goToReport3Page)
         self.report3Page = Report_3(master=self.master, app=self.app)
 
-        self.manageAllUsersButton = tk.Button(self.frame, text="Manage Users", command=self.manageUsersPage)
+        self.manageAllUsersButton = tk.Button(self.frame, text="Manage Users", command=self.goToManageUsersPage)
         self.manageUsersPage = ManageUsers(master=self.master, app=self.app)
+        
+        tk.Button(self.frame, text="My W2", command=self.goToReport1Page).grid()
+        self.report1Page = MyReport_1(master=self.master, app=self.app)
+
+        tk.Button(self.frame, text="My Bi-Weekly Paycheck", command=self.goToReport2Page).grid()
+        self.report2Page = MyReport_2(master=self.master, app=self.app)
 
         self.addDependentButton = tk.Button(self.frame, text="Add Dependent", command=self.addDependentPage)
         self.addDependentPage = AddDependentPage(master=self.master, app=self.app)
@@ -88,7 +94,7 @@ class Menu(tk.Frame):
         # On start display of Menu, do the following:
         self.topLabel.configure(text="Menu\n{}".format(Auth.getString()))
 
-        self.manageMyselfButton = tk.Button(self.frame, text="Edit My Profile", command=self.manageMyselfPage)
+        self.manageMyselfButton = tk.Button(self.frame, text="Edit My Profile", command=self.goToManageMyselfPage)
         self.manageMyselfPage = ManageMyselfPage(master=self.master, app=self.app)
         self.addDependentButton.grid()
 
@@ -111,13 +117,21 @@ class Menu(tk.Frame):
 
         self.frame.grid(row=1, column=1)
 
-    def manageUsersPage(self):
+    def goToManageUsersPage(self):
         self.frame.grid_forget()
         self.manageUsersPage.start()
 
-    def manageMyselfPage(self):
+    def goToManageMyselfPage(self):
         self.frame.grid_forget()
         self.manageMyselfPage.start()
+
+    def goToReport1Page(self):
+        self.frame.grid_forget()
+        self.report1Page.start()
+
+    def goToReport2Page(self):
+        self.frame.grid_forget()
+        self.report2Page.start()
 
     def addDependentPage(self):
         self.frame.grid_forget()
@@ -883,6 +897,45 @@ class ManageMyselfPage(tk.Frame):
         self.frame.grid_forget()
         Menu(master=self.master, app=self.app).start()
 
+# Employee Bi weekly paycheck
+class MyReport_2(tk.Frame):
+    def __init__(self, master=None, app=None):
+        self.master = master
+        self.app = app
+        self.frame = tk.Frame(self.master)
+        self.report = tk.Label(self.frame, text="Update")
+        self.report.grid()
+
+        # Components
+        tk.Button(self.frame, text="Go back to Menu", command=self.go_back).grid()
+
+    def start(self):
+        self.frame.grid(row=1, column=1)
+        self.report.configure(text=reports.checkReport())
+
+    def go_back(self):
+        self.frame.grid_forget()
+        Menu(master=self.master, app=self.app).start()
+
+# Employee W2
+class MyReport_1(tk.Frame):
+    def __init__(self, master=None, app=None):
+        self.master = master
+        self.app = app
+        self.frame = tk.Frame(self.master)
+        self.report = tk.Label(self.frame, text="Update")
+        self.report.grid()
+
+        # Components
+        tk.Button(self.frame, text="Go back to Menu", command=self.go_back).grid()
+
+    def start(self):
+        self.frame.grid(row=1, column=1)
+        self.report.configure(text=reports.w2Report())
+
+    def go_back(self):
+        self.frame.grid_forget()
+        Menu(master=self.master, app=self.app).start()
 
 # Employee W2
 class Report_1(tk.Frame):
