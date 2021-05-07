@@ -6,7 +6,6 @@ from Employee import Employee
 from Dependent import Dependent
 import postGres as DB
 import Auth
-import expenseReport
 import reports
 
 currentEmployee = Employee
@@ -937,7 +936,7 @@ class Report_3(tk.Frame):
         tk.Button(self.frame, text="Go Back", command=self.go_back).grid()
 
     def start(self):
-        self.report.configure(text=expenseReport.report())
+        self.report.configure(text=reports.expenseReport())
         self.frame.grid(row=1, column=1)
 
     def go_back(self):
