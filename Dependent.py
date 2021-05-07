@@ -76,7 +76,7 @@ class Dependent:
         if self.exists:
             log(self.ID, "Dependent already created, did you mean to update?")
             return
-        DB.execute(Query.CREATE(Entity.DEPENDENT, self.exists, self.first_name, self.last_name, self.ssn, self.benefitSelection))
+        DB.execute(Query.CREATE(Entity.DEPENDENT, self.d_id, self.first_name, self.last_name, self.ssn, self.benefitSelection))
 
         if DB.result():
             log(self.ID, "Created Dependent {}".format(self.d_id))
