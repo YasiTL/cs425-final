@@ -6,6 +6,7 @@ from Employee import Employee
 from Dependent import Dependent
 import postGres as DB
 import Auth
+import expenseReport
 
 currentEmployee = Employee
 enterCallback = None
@@ -91,11 +92,11 @@ class Menu(tk.Frame):
         self.manageMyselfPage = ManageMyselfPage(master=self.master, app=self.app)
         self.addDependentButton.grid()
 
-        if (Auth.getTitle() == DataType.JobTitle.ADMIN):
+        if Auth.getTitle() == DataType.JobTitle.ADMIN:
             self.comapnySpendingReportButton.grid()
             self.manageAllUsersButton.grid()
             self.manageMyselfButton.grid()
-        elif (Auth.getTitle() == DataType.JobTitle.MANAGER):
+        elif Auth.getTitle() == DataType.JobTitle.MANAGER:
             self.manageAllUsersButton.grid()
             self.manageMyselfButton.grid()
         else:
@@ -117,7 +118,7 @@ class Menu(tk.Frame):
     def manageMyselfPage(self):
         self.frame.grid_forget()
         self.manageMyselfPage.start()
-    
+
     def addDependentPage(self):
         self.frame.grid_forget()
         self.addDependentPage.start()
@@ -190,6 +191,7 @@ class ManageUsers(tk.Frame):
         else:
             tk.Label(self.frame, text="Cannot find employee").grid(row=4, column=1)
 
+
 class UserPage(tk.Frame):
     def __init__(self, master=None, app=None):
         self.master = master
@@ -242,6 +244,7 @@ class UserPage(tk.Frame):
         DB.execute(DB.Query.DELETE(DB.Entity.EMPLOYEE, "e_id='{}'".format(currentEmployee.e_id)))
         self.go_back
 
+
 class AddDependentPage(tk.Frame):
     def __init__(self, master=None, app=None):
         self.master = master
@@ -283,7 +286,7 @@ class AddDependentPage(tk.Frame):
                 self.first_name.get(),
                 self.last_name.get(),
                 self.ssn.get(),
-                DataType.BenefitSelection(benifit.get().upper())
+                DataType.BenefitSelection(benifit.get().upper()),
             )
             newDependent.create()
 
@@ -304,6 +307,7 @@ class AddDependentPage(tk.Frame):
         enterCallback = None
         self.frame.grid_forget()
         ManageUsers(master=self.master, app=self.app).start()
+
 
 class AddUserPage(tk.Frame):
     def __init__(self, master=None, app=None):
@@ -392,11 +396,11 @@ class AddUserPage(tk.Frame):
         self.F01k_deduction = tk.Entry(self.frame)
         self.F01k_deduction.grid(row=13, column=1)
 
-        tk.Label(self.frame, text="Rate").grid(row=14, column=0) # TODO: change label based on hourly or salaried
+        tk.Label(self.frame, text="Rate").grid(row=14, column=0)  # TODO: change label based on hourly or salaried
         self.rate = tk.Entry(self.frame)
         self.rate.grid(row=14, column=1)
 
-        tk.Label(self.frame, text="Hours").grid(row=15, column=0) # TODO: change label based on hourly or salaried
+        tk.Label(self.frame, text="Hours").grid(row=15, column=0)  # TODO: change label based on hourly or salaried
         self.hours = tk.Entry(self.frame)
         self.hours.grid(row=15, column=1)
 
@@ -595,7 +599,7 @@ class EditUserPage(tk.Frame):
         self.e_id = tk.Entry(self.frame)
         self.e_id.insert(0, currentEmployee.e_id)
         self.e_id.grid(row=1, column=1)
-        self.e_id.configure(state='disable')
+        self.e_id.configure(state="disable")
 
         tk.Label(self.frame, text="First name").grid(row=2, column=0)
         self.first_name = tk.Entry(self.frame)
@@ -649,12 +653,12 @@ class EditUserPage(tk.Frame):
         self.F01k_deduction.insert(0, currentEmployee.F01k_deduction)
         self.F01k_deduction.grid(row=13, column=1)
 
-        tk.Label(self.frame, text="Rate").grid(row=14, column=0) # TODO: change label based on hourly or salaried
+        tk.Label(self.frame, text="Rate").grid(row=14, column=0)  # TODO: change label based on hourly or salaried
         self.rate = tk.Entry(self.frame)
         self.rate.insert(0, currentEmployee.rate)
         self.rate.grid(row=14, column=1)
-        
-        tk.Label(self.frame, text="Hours").grid(row=15, column=0) # TODO: change label based on hourly or salaried
+
+        tk.Label(self.frame, text="Hours").grid(row=15, column=0)  # TODO: change label based on hourly or salaried
         self.hours = tk.Entry(self.frame)
         self.hours.insert(0, currentEmployee.hours)
         self.hours.grid(row=15, column=1)
@@ -707,6 +711,7 @@ class EditUserPage(tk.Frame):
         self.frame.grid_forget()
         UserPage(master=self.master, app=self.app).start()
 
+
 class ManageMyselfPage(tk.Frame):
     def __init__(self, master=None, app=None):
         global currentEmployee
@@ -757,7 +762,7 @@ class ManageMyselfPage(tk.Frame):
         self.e_id = tk.Entry(self.frame)
         self.e_id.insert(0, currentEmployee.e_id)
         self.e_id.grid(row=1, column=1)
-        self.e_id.configure(state='disable')
+        self.e_id.configure(state="disable")
 
         tk.Label(self.frame, text="First name").grid(row=2, column=0)
         self.first_name = tk.Entry(self.frame)
@@ -777,15 +782,14 @@ class ManageMyselfPage(tk.Frame):
         tk.Label(self.frame, text="Job title").grid(row=5, column=0)
         jobTitleOptionMenu = tk.OptionMenu(self.frame, self.title, *titles)
         jobTitleOptionMenu.grid(row=5, column=1)
-        if (currentEmployee.job_title != "ADMIN"):
-            jobTitleOptionMenu.configure(state='disable')
+        if currentEmployee.job_title != "ADMIN":
+            jobTitleOptionMenu.configure(state="disable")
 
         tk.Label(self.frame, text="Salary type").grid(row=6, column=0)
         salaryOptionMenu = tk.OptionMenu(self.frame, self.payType, *payTypes)
         salaryOptionMenu.grid(row=6, column=1)
-        if (currentEmployee.job_title != "ADMIN"):
-            salaryOptionMenu.configure(state='disable')
-
+        if currentEmployee.job_title != "ADMIN":
+            salaryOptionMenu.configure(state="disable")
 
         tk.Label(self.frame, text="Insurance plan").grid(row=7, column=0)
         tk.OptionMenu(self.frame, self.insurance, *insurances).grid(row=7, column=1)
@@ -818,14 +822,14 @@ class ManageMyselfPage(tk.Frame):
         self.F01k_deduction.insert(0, currentEmployee.F01k_deduction)
         self.F01k_deduction.grid(row=13, column=1)
 
-        tk.Label(self.frame, text="Rate").grid(row=14, column=0) # TODO: change label based on hourly or salaried
+        tk.Label(self.frame, text="Rate").grid(row=14, column=0)  # TODO: change label based on hourly or salaried
         self.rate = tk.Entry(self.frame)
         self.rate.insert(0, currentEmployee.rate)
         self.rate.grid(row=14, column=1)
-        if (currentEmployee.job_title != "ADMIN"):
-            self.rate.configure(state='disable')
-        
-        tk.Label(self.frame, text="Hours").grid(row=15, column=0) # TODO: change label based on hourly or salaried
+        if currentEmployee.job_title != "ADMIN":
+            self.rate.configure(state="disable")
+
+        tk.Label(self.frame, text="Hours").grid(row=15, column=0)  # TODO: change label based on hourly or salaried
         self.hours = tk.Entry(self.frame)
         self.hours.insert(0, currentEmployee.hours)
         self.hours.grid(row=15, column=1)
@@ -924,10 +928,12 @@ class Report_3(tk.Frame):
         self.frame = tk.Frame(self.master)
 
         # Components
-        tk.Label(self.frame, text="Report 3").grid()
+        self.report = tk.Label(self.frame, text="Update")
+        self.report.grid()
         tk.Button(self.frame, text="Go Back", command=self.go_back).grid()
 
     def start(self):
+        self.report.configure(text=expenseReport.report())
         self.frame.grid(row=1, column=1)
 
     def go_back(self):
