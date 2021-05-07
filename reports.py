@@ -7,31 +7,30 @@ from Dependent import Dependent
 
 
 def checkReport():
-    biweeklyReport= ""
+    biweeklyReport = ""
     ssn = ""
     biweeklyPay = 0
     stateTax = 0
     federalTax = 0
     socialsPay = 0
     medicarePay = 0
-    F01kPay = 0 
+    F01kPay = 0
     insurancePay = 0
     finalPay = 0
 
     DB.execute(Query.SELECT(Entity.EMPLOYEE, "e_id"))
 
-    #get current employee 
+    # get current employee
     e = Auth.getCurrentEmployee()
-    ssn = e.ssn 
-
+    ssn = e.ssn
 
     if e.salary_type == DataType.Salary.HOURLY.value:
-        biweeklyPay = round(e.hours * e.rate,2)
-    else:  
-        biweeklyPay = round(e.rate/26, 2)
+        biweeklyPay = round(e.hours * e.rate, 2)
+    else:
+        biweeklyPay = round(e.rate / 26, 2)
 
     sTax = biweeklyPay * e.getTaxRate()
-    stateTax = round(sTax,2)
+    stateTax = round(sTax, 2)
 
     if e.rate < 10000:
         fTax = biweeklyPay * 0.01
@@ -45,30 +44,30 @@ def checkReport():
         fTax = biweeklyPay * 0.08
     else:
         fTax = biweeklyPay * 0.09
-    
-    federalTax = round(fTax,2)
-       
-    #SS
+
+    federalTax = round(fTax, 2)
+
+    # SS
     if e.salary_type == DataType.Salary.HOURLY.value:
         ssPay = biweeklyPay * 0.15
-        socialsPay = round(ssPay,2)
-    else:  
+        socialsPay = round(ssPay, 2)
+    else:
         ssPay = biweeklyPay * 0.075
-        socialsPay = round(ssPay,2)
-        #company pays other 0.075 in their expense report
+        socialsPay = round(ssPay, 2)
+        # company pays other 0.075 in their expense report
 
-    #medicare
+    # medicare
     mcPay = biweeklyPay * 0.025
-    medicarePay = round(mcPay,2)
+    medicarePay = round(mcPay, 2)
 
-    #401k deduction
-    F01kPay = round(biweeklyPay * (e.F01k_deduction/100),2)
-    #company matched up to 7%
-  
-    insurancePay = round(float(e.getInsurnacePlanCost()),2)
-    #here 
-    finalPay = round(biweeklyPay - stateTax - federalTax - socialsPay - medicarePay - F01kPay - insurancePay,2)
-    
+    # 401k deduction
+    F01kPay = round(biweeklyPay * (e.F01k_deduction / 100), 2)
+    # company matched up to 7%
+
+    insurancePay = round(float(e.getInsurnacePlanCost()), 2)
+    # here
+    finalPay = round(biweeklyPay - stateTax - federalTax - socialsPay - medicarePay - F01kPay - insurancePay, 2)
+
     biweeklyReport += """
 ---------[ BIWEEKLY CHECK REPORT ]---------
     
@@ -82,14 +81,15 @@ def checkReport():
     insurance cost: ${}
     Final pay: ${}
     """.format(
-        ssn, biweeklyPay, stateTax, federalTax, socialsPay, medicarePay , F01kPay, insurancePay ,finalPay
+        ssn, biweeklyPay, stateTax, federalTax, socialsPay, medicarePay, F01kPay, insurancePay, finalPay
     )
 
     return biweeklyReport
 
+
 def w2Report():
-    #print("this is report 2")
-    #52 weeks yearly
+    # print("this is report 2")
+    # 52 weeks yearly
     w2ReportText = "here it will show"
     DB.execute(Query.SELECT(Entity.EMPLOYEE, "e_id"))
     for ID in DB.result():
@@ -97,6 +97,7 @@ def w2Report():
         print(e.first_name, e.ssn, e.rate)
     return w2ReportText
 
+
 def expenseReport():
     print("this is report 3")
-    #all employees
+    # all employees

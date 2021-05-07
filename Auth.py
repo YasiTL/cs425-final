@@ -25,8 +25,10 @@ def signIn(first_name: str, e_id: str):
         currentUser = None
         currentEmployee = None
 
+
 def getCurrentEmployee():
     return currentEmployee
+
 
 def signOut():
     global currentTitle, currentUser, currentEmployee
