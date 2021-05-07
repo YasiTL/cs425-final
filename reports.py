@@ -135,7 +135,7 @@ def w2Report():
     w2ReportText += """
 ---------[ W2 REPORT ]---------
     
-    SNN: {}
+    SSN: {}
     Yearly Income : ${}
     Tax Deductions : ${}
     Other Deductions : ${}
