@@ -100,10 +100,10 @@ def w2Report():
 
     ssn = e.ssn
 
-    sTax = round(e.rate * e.getTaxRate(),2)
+    sTax = round(e.rate * e.getTaxRate(), 2)
 
     if e.rate < 10000:
-        fTax = e.rate* 0.01
+        fTax = e.rate * 0.01
     elif e.rate < 40000:
         fTax = e.rate * 0.02
     elif e.rate < 85000:
@@ -114,24 +114,23 @@ def w2Report():
         fTax = e.rate * 0.08
     else:
         fTax = e.rate * 0.09
-        
-    taxDeductions = round(sTax + fTax,2)
-    
-    insuranceCost = round(e.getInsurnacePlanCost() * 26,2)
-    
+
+    taxDeductions = round(sTax + fTax, 2)
+
+    insuranceCost = round(e.getInsurnacePlanCost(), 2)
+
     if e.salary_type == DataType.Salary.HOURLY.value:
-        yearlyIncome = e.hours * e.rate 
+        yearlyIncome = e.hours * e.rate
         f01kTotal = round(yearlyIncome * (e.F01k_deduction / 100), 2)
-        mcPay = round(yearlyIncome * 0.025,2)
+        mcPay = round(yearlyIncome * 0.025, 2)
     else:
         yearlyIncome = e.rate
         bonus += rnd(0, int(e.rate)) + e.rate % 1
         f01kTotal = round(e.rate * (e.F01k_deduction / 100), 2)
-        mcPay = round(e.rate * 0.025,2)
+        mcPay = round(e.rate * 0.025, 2)
 
-    other = insuranceCost + f01kTotal + mcPay
+    other = f01kTotal + mcPay + insuranceCost
 
-    
     w2ReportText += """
 ---------[ W2 REPORT ]---------
     
@@ -143,10 +142,11 @@ def w2Report():
     Take home: ${}
     
     """.format(
-        ssn, yearlyIncome, taxDeductions , other, bonus, yearlyIncome-taxDeductions-other
+        ssn, yearlyIncome, taxDeductions, other, bonus, yearlyIncome - taxDeductions - other
     )
 
     return w2ReportText
+
 
 def expenseReport():
     repo = ""
@@ -172,7 +172,6 @@ def expenseReport():
         employeeCount += 1
         premium += e.getInsurnacePlanCost() / 2
 
-    
     repo += """
 ---------[ COMPANY EXPENSE REPORT ]---------
     
