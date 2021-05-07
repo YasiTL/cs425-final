@@ -12,9 +12,7 @@ class Entity(Enum):
         "insurancePlan_t",
         (
             "plan_id",
-            "employee_cost_for_individualPlan",
-            "employee_cost_for_familyPlan",
-            "employer_cost_for_indivudal",
+            "employer_cost_for_individual",
             "employer_cost_for_family",
         ),
     )
