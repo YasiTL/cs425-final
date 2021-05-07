@@ -120,11 +120,11 @@ def w2Report():
     insuranceCost = round(e.getInsurnacePlanCost(), 2)
 
     if e.salary_type == DataType.Salary.HOURLY.value:
-        yearlyIncome = e.hours * e.rate
+        yearlyIncome = e.hours * e.rate * 26
         f01kTotal = round(yearlyIncome * (e.F01k_deduction / 100), 2)
         mcPay = round(yearlyIncome * 0.025, 2)
     else:
-        yearlyIncome = e.rate
+        yearlyIncome = e.rate * 26
         bonus += rnd(0, int(e.rate)) + e.rate % 1
         f01kTotal = round(e.rate * (e.F01k_deduction / 100), 2)
         mcPay = round(e.rate * 0.025, 2)
