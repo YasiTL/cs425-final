@@ -124,7 +124,7 @@ def w2Report():
         f01kTotal = round(yearlyIncome * (e.F01k_deduction / 100), 2)
         mcPay = round(yearlyIncome * 0.025, 2)
     else:
-        yearlyIncome = e.rate * 26
+        yearlyIncome = e.rate
         bonus += rnd(0, int(e.rate)) + e.rate % 1
         f01kTotal = round(e.rate * (e.F01k_deduction / 100), 2)
         mcPay = round(e.rate * 0.025, 2)
