@@ -833,7 +833,8 @@ class ManageMyselfPage(tk.Frame):
         self.hours = tk.Entry(self.frame)
         self.hours.insert(0, currentEmployee.hours)
         self.hours.grid(row=15, column=1)
-
+        if currentEmployee.job_title == "EMPLOYEE" and currentEmployee.salary_type == "SALARY":
+            self.hours.configure(state="disable")
         self.DependentsTreeview = ListboxEditable(self.frame, list(currentEmployee.Dependents), 17, 0)
         self.PhoneNumbersTreeview = ListboxEditable(self.frame, list(currentEmployee.PhoneNumbers), 17, 1)
         self.BenefitsTreeview = ListboxEditable(self.frame, list(currentEmployee.Benefits), 17, 2)
