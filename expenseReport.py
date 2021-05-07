@@ -20,14 +20,15 @@ def report():
     for ID in DB.result():
         e = Employee(ID[0])
         wage = e.rate * e.hours
+        if e.salary_type == DataType.Salary.SALARY.value:
+            wage = e.rate
+            bonuses += rnd(0, int(e.rate)) + e.rate % 1
+            bonusCount += 1
+            social += 0.075 * wage
         employeeWages += wage
         f01k += wage * min(float(e.F01k_deduction) / 100.0, 0.07)
         employeeCount += 1
         premium += e.getInsurnacePlanCost() / 2
-        if e.salary_type == DataType.Salary.SALARY.value:
-            bonuses += rnd(0, int(e.rate)) + e.rate % 1
-            bonusCount += 1
-            social += 0.075 * wage
 
     repo += """
 ---------[ COMPANY EXPENSE REPORT ]---------
