@@ -320,7 +320,7 @@ class AddDependentPage(tk.Frame):
         global enterCallback
         enterCallback = None
         self.frame.grid_forget()
-        ManageUsers(master=self.master, app=self.app).start()
+        Menu(master=self.master, app=self.app).start()
 
 
 class AddUserPage(tk.Frame):
